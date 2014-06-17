@@ -80,3 +80,20 @@ String.prototype.toHSLString = function() {
 
 	return hslStringStart + this.toHSLArray().join(",") + hslStringEnd;
 }
+
+/**
+ * Retrieve the color unit being used
+ * @param {String} color
+ * @return ...
+ */
+function getType(color) {
+	if(color.match(/^#?[A-F0-9]{3}([A-F0-9]{3})?$/i)) {
+		return 0; // hex
+	}
+	if(color.match(/^rgb\(*\)$/i)) { // TODO
+		return 1; // rgb
+	}
+	if(color.match(/^hsl\(*\)$/i)) { //TODO
+		return 2; // hsl
+	}
+}

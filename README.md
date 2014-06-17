@@ -1,7 +1,7 @@
 ColorParser
 ===========
 
-A simple, lightweight, dependency-free JavaScript library to handle color conversion
+A simple, lightweight, dependency-free JavaScript library to handle color conversion.
 
 ## Examples
 
@@ -17,3 +17,8 @@ As easy as
 ## Demo
 
 Coming soon.
+
+## Future
+
+* Support transparency (`rgba()`, `hsla()`)? _Caveat_: HEX color codes do not have transparency.
+* Support CSS Named colors and X11 colors (e.g. `aliceblue`, `red`)
