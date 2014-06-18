@@ -3,6 +3,14 @@ ColorParser
 
 A simple, lightweight, dependency-free JavaScript library to handle color conversion.
 
+## Installation
+
+Download the `colorparser.js` file into your web directory, then
+
+	<script src="path/to/colorparser.js" type="text/javascript"></script>
+
+That's it.
+
 ## Examples
 
 As easy as
