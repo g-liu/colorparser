@@ -36,12 +36,12 @@ Three color spaces are available:
 Three output formats are available:
 
 * (raw JSON)
-  - for RGB: {"r": ###, "g": ###, "b": ###}
-  - for Hex: {"r": "##", "g": "##", "b": "##"}
-  - for HSL: {"h": ###, "s": ###, "l": ###}
+  - for RGB: `{"r": ###, "g": ###, "b": ###}`
+  - for Hex: `{"r": "##", "g": "##", "b": "##"}`
+  - for HSL: `{"h": ###, "s": ###, "l": ###}`
 * Array
-  - for RGB, Hex: [r, g, b]
-  - for HSL: [h, s, l]
+  - for RGB, Hex: `[r, g, b]`
+  - for HSL: `[h, s, l]`
 * String (a valid CSS color string)
 
 To convert a color to another color space, with an optional output format:
@@ -59,9 +59,15 @@ See "Examples" section.
 
 The library supports a subset of valid CSS colors.
 
-*RGB:* `rgb(###, ###, ###)`, `rgb(###%, ###%, ###%)`
-*Hex:* `#xxx`, `#xxxxxx`, `xxx`, `xxxxxx`
-*HSL:* `hsl(###, ###%, ###%)`
+* *RGB:*
+  - `rgb(###, ###, ###)`
+  - `rgb(###%, ###%, ###%)`
+* *Hex:*
+  - `#xxx`
+  - `#xxxxxx`
+  - `xxx`
+  - `xxxxxx`
+* *HSL:* `hsl(###, ###%, ###%)`
 
 An invalid color format (e.g. `rgb(256,54,128)` or `#34fc`) will result in an error, for any conversion.
 
@@ -71,5 +77,7 @@ Coming soon.
 
 ## Future
 
-* Support transparency (`rgba()`, `hsla()`)? _Caveat_: HEX color codes do not have transparency.
+* Support transparency (`rgba()`, `hsla()`)
+  - _Caveat_: HEX color codes do not have transparency.
 * Support CSS Named colors and X11 colors (e.g. `aliceblue`, `red`)
+* Support Pantone colors (a long shot; 	this may need a library of its own!)
