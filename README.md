@@ -23,6 +23,48 @@ As easy as
 	"rgb( 33, 29, 255 )".toHSL(); // space friendly
 	"hsl(0, 22%, 84%)".toHexArray(); // Yep, we support HSL
 
+## Documentation
+
+_Documentation will be moved to a GitHub page soon. For now, it resides here._
+
+Three color spaces are available:
+
+* RGB (Red-Green-Blue)
+* Hex (Hexadecimal)
+* HSL (Hue-Saturation-Luminance)
+
+Three output formats are available:
+
+* (raw JSON)
+  - for RGB: {"r": ###, "g": ###, "b": ###}
+  - for Hex: {"r": "##", "g": "##", "b": "##"}
+  - for HSL: {"h": ###, "s": ###, "l": ###}
+* Array
+  - for RGB, Hex: [r, g, b]
+  - for HSL: [h, s, l]
+* String (a valid CSS color string)
+
+To convert a color to another color space, with an optional output format:
+
+    var string = "a valid color string here";
+    string.to<<colorspace>><<outputformat>>();
+
+If `<<outputformat>>` is not specified, defaults to returning a JSON object.
+
+### Examples
+
+See "Examples" section.
+
+### Valid color formats
+
+The library supports a subset of valid CSS colors.
+
+*RGB:* `rgb(###, ###, ###)`, `rgb(###%, ###%, ###%)`
+*Hex:* `#xxx`, `#xxxxxx`, `xxx`, `xxxxxx`
+*HSL:* `hsl(###, ###%, ###%)`
+
+An invalid color format (e.g. `rgb(256,54,128)` or `#34fc`) will result in an error, for any conversion.
+
 ## Demo
 
 Coming soon.
