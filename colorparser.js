@@ -87,13 +87,69 @@ String.prototype.toHSLString = function() {
  * @return ...
  */
 function getType(color) {
-	if(color.match(/^#?[A-F0-9]{3}([A-F0-9]{3})?$/i)) {
-		return 0; // hex
+	if(isHex()) {
+		return 0;
 	}
-	if(color.match(/^rgb\(*\)$/i)) { // TODO
-		return 1; // rgb
+	else if(isRGB()) {
+		return 1;
 	}
-	if(color.match(/^hsl\(*\)$/i)) { //TODO
-		return 2; // hsl
+	else if(isHSL()) {
+		return 2;
+	}
+	else {
+		throw("Not a color: '" + color + "' is not a color.");
+	}
+
+	function isHex() {
+		return color.match(/^#?[A-F0-9]{3}([A-F0-9]{3})?$/i);
+	}
+
+	function isRGB() {
+		// preliminary "loose" regex match
+		if(color.match(/^rgb\(\s*(\d{1,3}%?\s*,\s*){2}(\d{1,3}%?)\s*\)$/i)) {
+			var nums = color.match(/[0-9]{1,3}%?/gi);
+			if(!nums || !nums.length || nums.length != 3) {
+				return false;
+			}
+
+			// check format of each
+			var usePercent = (nums[0][nums[0].length - 1] === "%") ? true : false;
+			for(var i = 0; i < 3; i++) {
+				var numInt = parseInt(nums[i], 10);
+				if(usePercent && (nums[i][nums[i].length - 1] !== "%" || !(numInt >= 0 && numInt <= 100))) {
+					return false;
+				}
+				else if(numInt < 0 || numInt > 255) {
+					return false;
+				}
+			}
+			return true;
+		}
+
+		return false;
+	}
+
+	function isHSL() {
+		// preliminary "loose" regex match
+		if(color.match(/^hsl\(\s*\d{1,3}\s*,\s*\d{1,3}%\s*,\s*\d{1,3}%\s*\)$/i)) {
+			var nums = color.match(/\d{1,3}%?/gi);
+			if(!nums || !nums.length || nums.length !== 3) {
+				return false;
+			}
+
+			// check first num separately
+			if(nums[0][nums[0].length - 1] === "%" || !(nums[0] >= 0 && nums[0] <= 360)) {
+				return false;
+			}
+			for(var i = 1; i < 3; i++) {
+				var numInt = parseInt(nums[i], 10);
+				if(nums[i][nums[i].length - 1] !== "%" || !(numInt >= 0 && numInt <= 100)) {
+					return false;
+				}
+			}
+			return true;
+		}
+
+		return false;
 	}
 }

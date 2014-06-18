@@ -12,7 +12,8 @@ As easy as
 	    // want that without "#" prefix? .toHexString(false)
     
 	"a3f".toRGBString(); // works with different hex color formats
-	"#ab6622".toHSL(); // supports HSL too!
+	"rgb( 33, 29, 255 )".toHSL(); // space friendly
+	"hsl(0, 22%, 84%)".toHexArray(); // Yep, we support HSL
 
 ## Demo
 
