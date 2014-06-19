@@ -15,7 +15,7 @@ String.prototype.toRGBArray = function(usePercents) {
 	switch(type) {
 		case 1: // RGB
 			var rgb = this.match(/\d{1,3}%?/gi);
-			var asPercent = (rgb[0][rgb[0].length - 1] === "%")
+			var asPercent = (rgb[0].charAt(rgb[0].length - 1) === "%")
 			for(var i = 0; i < rgb.length; i++) {
 				rgb[i] = parseInt(rgb[i], 10);
 				if(asPercent && !usePercents) {
@@ -56,9 +56,9 @@ String.prototype.toRGBArray = function(usePercents) {
 			break;
 		case 0: // HEX
 		default: 
-			var that = (this[0] === "#" ? this.substring(1) : this);
+			var that = (this.charAt(0) === "#" ? this.substring(1) : this);
 			if(that.length === 3) {
-				that = that[0] + that[0] + that[1] + that[1] + that[2] + that[2];
+				that = that.charAt(0) + that.charAt(0) + that.charAt(1) + that.charAt(1) + that.charAt(2) + that.charAt(2);
 			}
 			var bigint = parseInt(that, 16);
 			rgbArray[0] = ((bigint >> 16) & 255) / (!!usePercents ? 255 : 1);
@@ -97,7 +97,7 @@ String.prototype.toHexArray = function() {
 	var rgb = this.toRGBArray();
 	var hexArray = [];
 	for(var i = 0; i < rgb.length; i++) {
-		hexArray[i] = rgb[i].toString(16);
+		hexArray[i] = ("00" + rgb[i].toString(16)).slice(-2);
 	}
 
 	return hexArray;
@@ -107,7 +107,7 @@ String.prototype.toHexArray = function() {
  * @param {Boolean} prefix: whether to include the "#" prefix
  */
 String.prototype.toHexString = function(prefix) {
-	var pfx = prefix ? "#" : "";
+	var pfx = (typeof prefix === 'undefined') ? "#" : "";
 	return pfx + this.toHexArray().join("");
 }
 
@@ -130,9 +130,10 @@ String.prototype.toHSLArray = function() {
 	var max = Math.max(r, g, b), min = Math.min(r, g, b);
     var h, s, l = (max + min) / 2;
 	
-	if(max == min) {
+	if(max === min) {
         h = s = 0;
-    } else {
+    }
+    else {
         var d = max - min;
         s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
         switch(max) {
@@ -184,13 +185,13 @@ function getType() {
 			}
 
 			// check format of each
-			var usePercent = (nums[0][nums[0].length - 1] === "%");
+			var usePercent = (nums[0].charAt(nums[0].length - 1) === "%");
 			for(var i = 0; i < 3; i++) {
 				var numInt = parseFloat(nums[i], 10);
-				if(usePercent && (nums[i][nums[i].length - 1] !== "%" || numInt < 0 || numInt > 100)) {
+				if(usePercent && (nums[i].charAt(nums[i].length - 1) !== "%" || numInt < 0 || numInt > 100)) {
 					return false;
 				}
-				else if(!usePercent && nums[i][nums[i].length - 1] === "%" || numInt < 0 || numInt > 255) {
+				else if(!usePercent && nums[i].charAt(nums[i].length - 1) === "%" || numInt < 0 || numInt > 255) {
 					return false;
 				}
 			}
@@ -209,11 +210,11 @@ function getType() {
 			}
 
 			// check first value (hue) separately
-			if(nums[0][nums[0].length - 1] === "%") {
+			if(nums[0].charAt(nums[0].length - 1) === "%") {
 				return false;
 			}
 			for(var i = 1; i < 3; i++) {
-				if(nums[i][nums[i].length - 1] !== "%") {
+				if(nums[i].charAt(nums[i].length - 1) !== "%") {
 					return false;
 				}
 			}
