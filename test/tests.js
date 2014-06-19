@@ -71,7 +71,6 @@ QUnit.test("hex2hex (reflexive)", function(assert) {
 	var res = hex.toHexArray();
 	assert.deepEqual(res, hexExp, "expecting array " + hexExp.toString());
 });
-
 QUnit.test("rgb2hex", function(assert) {
 	var res = rgb.toHexArray();
 	assert.deepEqual(res, hexExp, "expecting array " + hexExp.toString());
@@ -84,7 +83,6 @@ QUnit.test("rgb2rgb (reflexive)", function(assert) {
 	var res = rgb.toRGBArray();
 	assert.deepEqual(res, rgbExp, "expecting array " + rgbExp.toString());
 });
-
 QUnit.test("hsl2rgb", function(assert) {
 	var res = hsl.toRGBArray();
 	assert.deepEqual(res, rgbExp, "expecting array " + rgbExp.toString());
@@ -130,6 +128,22 @@ QUnit.test("hsl2rgb2hsl", function(assert) {
 });
 QUnit.test("hsl2hex2hsl", function(assert) {
 	assert.deepEqual(hsl.toHexString().toHSLString(), hsl, "Not equal to self!");
+});
+
+QUnit.module("rgb percentage handling", {
+	setup: function() {
+		rgb = "rgb(51,129,203)";
+		rgbP = "rgb(0.2%,0.50588%,0.79608%)";
+	}
+});
+QUnit.test("rgb2rgb", function(assert) {
+	assert.deepEqual(rgbP.toRGBArray(), rgb.toRGBArray(), "percent not handled correctly!");
+});
+QUnit.test("rgb2hex", function(assert) {
+	assert.deepEqual(rgbP.toHexArray(), rgb.toHexArray(), "percent not handled correctly!");
+});
+QUnit.test("rgb2hsl", function(assert) {
+	assert.deepEqual(rgbP.toHSLArray(), rgb.toHSLArray(), "percent not handled correctly!");
 });
 
 QUnit.module("hex format handling");
@@ -217,24 +231,59 @@ QUnit.test("snap lum to 0", function(assert) {
 	assert.deepEqual(lsnap.toHSLArray()[2], 0, "lum should snap to 0");
 });
 
-QUnit.module("whitespace agnostic");
+QUnit.module("whitespace agnostic", {
+	setup: function() {
+		rgbSp = "rgb( 8,  214,   62     )";
+		rgb = "rgb(8,214,62)";
+
+		hslSp = "hsl(   232, 48%,    81% )";
+		hsl = "hsl(232,48%,81%)";
+	}
+});
 QUnit.test("rgb2rgb", function(assert) {
-	assert.deepEqual("rgb( 8,  214,   62     )".toRGBArray(), "rgb(8,214,62)".toRGBArray(), "whitespace not ignored!");
+	assert.deepEqual(rgbSp.toRGBArray(), rgb.toRGBArray(), "whitespace not ignored!");
 });
 QUnit.test("rgb2hex", function(assert) {
-	assert.deepEqual("rgb( 8,  214,   62     )".toHexArray(), "rgb(8,214,62)".toHexArray(), "whitespace not ignored!");
+	assert.deepEqual(rgbSp.toHexArray(), rgb.toHexArray(), "whitespace not ignored!");
 });
 QUnit.test("rgb2hsl", function(assert) {
-	assert.deepEqual("rgb( 8,  214,   62     )".toHSLArray(), "rgb(8,214,62)".toHSLArray(), "whitespace not ignored!");
+	assert.deepEqual(rgbSp.toHSLArray(), rgb.toHSLArray(), "whitespace not ignored!");
 });
 QUnit.test("hsl2rgb", function(assert) {
-	assert.deepEqual("hsl(   232, 48%,    81% )".toRGBArray(), "hsl(232,48%,81%)".toRGBArray(), "whitespace not ignored!");
+	assert.deepEqual(hslSp.toRGBArray(), hsl.toRGBArray(), "whitespace not ignored!");
 });
 QUnit.test("hsl2hex", function(assert) {
-	assert.deepEqual("hsl(   232, 48%,    81% )".toHexArray(), "hsl(232,48%,81%)".toHexArray(), "whitespace not ignored!");
+	assert.deepEqual(hslSp.toHexArray(), hsl.toHexArray(), "whitespace not ignored!");
 });
 QUnit.test("hsl2hsl", function(assert) {
-	assert.deepEqual("hsl(   232, 48%,    81% )".toHSLArray(), "hsl(232,48%,81%)".toHSLArray(), "whitespace not ignored!");
+	assert.deepEqual(hslSp.toHSLArray(), hsl.toHSLArray(), "whitespace not ignored!");
+});
+
+QUnit.module("ignore extra zeroes", {
+	setup: function() {
+		rgb0 = "rgb(00251,000053,000104)";
+		rgb = "rgb(251,53,104)";
+		hsl0 = "hsl(0000251,0049%,060%)";
+		hsl = "hsl(251,49%,60%)";
+	}
+});
+QUnit.test("rgb2rgb", function(assert) {
+	assert.deepEqual(rgb0.toRGBArray(), rgb.toRGBArray(), "padded zeroes not ignored!");
+});
+QUnit.test("rgb2hex", function(assert) {
+	assert.deepEqual(rgb0.toHexArray(), rgb.toHexArray(), "padded zeroes not ignored!");
+});
+QUnit.test("rgb2hsl", function(assert) {
+	assert.deepEqual(rgb0.toHSLArray(), rgb.toHSLArray(), "padded zeroes not ignored!");
+});
+QUnit.test("hsl2rgb", function(assert) {
+	assert.deepEqual(hsl0.toRGBArray(), hsl.toRGBArray(), "padded zeroes not ignored!");
+});
+QUnit.test("hsl2hex", function(assert) {
+	assert.deepEqual(hsl0.toHexArray(), hsl.toHexArray(), "padded zeroes not ignored!");
+});
+QUnit.test("hsl2hsl", function(assert) {
+	assert.deepEqual(hsl0.toHSLArray(), hsl.toHSLArray(), "padded zeroes not ignored!");
 });
 
 // TODO: test filtering of invalid colors
