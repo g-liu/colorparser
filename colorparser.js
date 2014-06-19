@@ -28,7 +28,7 @@ String.prototype.toRGBArray = function(usePercents) {
 			rgbArray = rgb.slice(0, 3);
 			break;
 		case 2: // HSL
-			var hsl = this.match(/\d+(\.\d+)?%?|\.\d+%?/gi);
+			var hsl = this.match(/-?(\d+(\.\d+)?%?|\.\d+%?)/gi);
 			// normalize
 			hsl[0] = ((parseFloat(hsl[0], 10) % 360) + 360) % 360;
 			hsl[1] = Math.max(Math.min(100, parseFloat(hsl[1], 10)), 0) / 100;
