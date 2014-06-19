@@ -10,6 +10,8 @@ String.prototype.toRGB = function(usePercents) {
 String.prototype.toRGBArray = function(usePercents) {
 	var type = getType.call(this);
 	var rgbArray = [-1, -1, -1];
+
+	// convert from appropriate color space to RGB
 	switch(type) {
 		case 1: // RGB
 			var rgb = this.match(/\d{1,3}%?/gi);
@@ -26,10 +28,12 @@ String.prototype.toRGBArray = function(usePercents) {
 			rgbArray = rgb.slice(0, 3);
 			break;
 		case 2: // HSL
-			var hsl = this.match(/\d{1,3}/gi);
+			var hsl = this.match(/\d+(\.\d+)?%?|\.\d+%?/gi);
 			// normalize
-			hsl[0] = (hsl[0] == 360 ? 0 : hsl[0]);
-			hsl[1] /= 100; hsl[2] /= 100;
+			hsl[0] = ((parseFloat(hsl[0], 10) % 360) + 360) % 360;
+			hsl[1] = Math.max(Math.min(100, parseFloat(hsl[1], 10)), 0) / 100;
+			hsl[2] = Math.max(Math.min(100, parseFloat(hsl[2], 10)), 0) / 100;
+
 			var chroma = (1 - Math.abs(2 * hsl[2] - 1)) * hsl[1];
 			var _hue = hsl[0] / 60;
 			var x = chroma * (1 - Math.abs(_hue % 2 - 1));
@@ -44,7 +48,7 @@ String.prototype.toRGBArray = function(usePercents) {
 				default: rgb = [0, 0, 0]; break;
 			}
 			for(var i = 0; i < rgb.length; i++) {
-				rgbArray[i] += hsl[2] - 0.5 * chroma;
+				rgbArray[i] = rgb[i] + (hsl[2] - 0.5 * chroma);
 				if(!usePercents) {
 					rgbArray[i] = Math.round(rgbArray[i] * 255);
 				}
@@ -127,23 +131,25 @@ String.prototype.toHSLArray = function() {
     var h, s, l = (max + min) / 2;
 	
 	if(max == min) {
-        h = s = 0; // achromatic
+        h = s = 0;
     } else {
         var d = max - min;
         s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-        switch(max){
+        switch(max) {
             case r: h = (g - b) / d + (g < b ? 6 : 0); break;
             case g: h = (b - r) / d + 2; break;
             case b: h = (r - g) / d + 4; break;
+            default: h = 0; break;
         }
         h /= 6;
     }
 
-    return [h, s, l];
+    return [h * 360, s * 100, l * 100];
 }
 
 String.prototype.toHSLString = function() {
-	return "hsl(" + this.toHSLArray().join(",") + ")";
+	var hsl = this.toHSLArray();
+	return "hsl(" + hsl[0] + "," + hsl[1] + "%," + hsl[2] + "%)";
 }
 
 /**
@@ -171,8 +177,8 @@ function getType() {
 
 	function isRGB() {
 		// preliminary "loose" regex match
-		if(this.match(/^rgb\(\s*(\d{1,3}((\.\d+%)?|%)\s*,\s*){2}(\d{1,3}((\.\d+%)?|%))\s*\)$/i)) {
-			var nums = this.match(/[0-9]{1,3}((\.\d+%)?|%)/gi);
+		if(this.match(/^rgb\(\s*((\d+((\.\d+)?%)?|\.\d+%)\s*,\s*){2}(\d+((\.\d+)?%)?|\.\d+%)\s*\)$/i)) {
+			var nums = this.match(/\d+((\.\d+)?%)?|\.\d+%/gi);
 			if(!nums || !nums.length || nums.length != 3) {
 				return false;
 			}
@@ -181,10 +187,10 @@ function getType() {
 			var usePercent = (nums[0][nums[0].length - 1] === "%");
 			for(var i = 0; i < 3; i++) {
 				var numInt = parseFloat(nums[i], 10);
-				if(usePercent && (nums[i][nums[i].length - 1] !== "%" || !(numInt >= 0 && numInt <= 100))) {
+				if(usePercent && (nums[i][nums[i].length - 1] !== "%" || numInt < 0 || numInt > 100)) {
 					return false;
 				}
-				else if(numInt < 0 || numInt > 255) {
+				else if(!usePercent && nums[i][nums[i].length - 1] === "%" || numInt < 0 || numInt > 255) {
 					return false;
 				}
 			}
@@ -196,19 +202,18 @@ function getType() {
 
 	function isHSL() {
 		// preliminary "loose" regex match
-		if(this.match(/^hsl\(\s*\d{1,3}\s*,\s*\d{1,3}(\.\d+)?%\s*,\s*\d{1,3}(\.\d+)?%\s*\)$/i)) {
-			var nums = this.match(/\d{1,3}(\.\d+%)?/gi);
+		if(this.match(/^hsl\(\s*-?(\d+(\.\d+)?|\.\d+)(\s*,\s*-?(\d+(\.\d+)?%|\.\d+%)){2}\s*\)$/i)) {
+			var nums = this.match(/\d+(\.\d+)?%?|\.\d+%?/gi);
 			if(!nums || !nums.length || nums.length !== 3) {
 				return false;
 			}
 
-			// check first num separately
-			if(nums[0][nums[0].length - 1] === "%" || !(nums[0] >= 0 && nums[0] <= 360)) {
+			// check first value (hue) separately
+			if(nums[0][nums[0].length - 1] === "%") {
 				return false;
 			}
 			for(var i = 1; i < 3; i++) {
-				var numInt = parseFloat(nums[i], 10);
-				if(nums[i][nums[i].length - 1] !== "%" || !(numInt >= 0 && numInt <= 100)) {
+				if(nums[i][nums[i].length - 1] !== "%") {
 					return false;
 				}
 			}
