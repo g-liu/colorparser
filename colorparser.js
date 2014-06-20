@@ -154,6 +154,21 @@ String.prototype.toNamed = function() {
 }
 
 /**
+ * Alias
+ */
+String.prototype.toNamedString = function() { return this.toNamed(); }
+
+/**
+ * Alias
+ */
+String.prototype.toKeyword = function() { return this.toNamed(); }
+
+/**
+ * Alias
+ */
+String.prototype.toKeywordString = function() { return this.toNamed(); }
+
+/**
  * Retrieve the color unit being used
  * @param {String} color
  * @return ...
@@ -275,6 +290,7 @@ var NAMED_TO_HEX = {
 	"darkcyan": "#008b8b",
 	"darkgoldenrod": "#b8860b",
 	"darkgray": "#a9a9a9",
+	"darkgrey": "#a9a9a9",
 	"darkgreen": "#006400",
 	"darkkhaki": "#bdb76b",
 	"darkmagenta": "#8b008b",
@@ -286,11 +302,13 @@ var NAMED_TO_HEX = {
 	"darkseagreen": "#8fbc8f",
 	"darkslateblue": "#483d8b",
 	"darkslategray": "#2f4f4f",
+	"darkslategrey": "#2f4f4f",
 	"darkturquoise": "#00ced1",
 	"darkviolet": "#9400d3",
 	"deeppink": "#ff1493",
 	"deepskyblue": "#00bfff",
 	"dimgray": "#696969",
+	"dimgrey": "#696969",
 	"dodgerblue": "#1e90ff",
 	"firebrick": "#b22222",
 	"floralwhite": "#fffaf0",
@@ -301,6 +319,7 @@ var NAMED_TO_HEX = {
 	"gold": "#ffd700",
 	"goldenrod": "#daa520",
 	"gray": "#808080",
+	"grey": "#808080",
 	"green": "#008000",
 	"greenyellow": "#adff2f",
 	"honeydew": "#f0fff0",
@@ -318,12 +337,14 @@ var NAMED_TO_HEX = {
 	"lightcyan": "#e0ffff",
 	"lightgoldenrodyellow": "#fafad2",
 	"lightgray": "#d3d3d3",
+	"lightgrey": "#d3d3d3",
 	"lightgreen": "#90ee90",
 	"lightpink": "#ffb6c1",
 	"lightsalmon": "#ffa07a",
 	"lightseagreen": "#20b2aa",
 	"lightskyblue": "#87cefa",
 	"lightslategray": "#778899",
+	"lightslategrey": "#778899",
 	"lightsteelblue": "#b0c4de",
 	"lightyellow": "#ffffe0",
 	"lime": "#00ff00",
@@ -376,6 +397,7 @@ var NAMED_TO_HEX = {
 	"skyblue": "#87ceeb",
 	"slateblue": "#6a5acd",
 	"slategray": "#708090",
+	"slategrey": "#708090",
 	"snow": "#fffafa",
 	"springgreen": "#00ff7f",
 	"steelblue": "#4682b4",
