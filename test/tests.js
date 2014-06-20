@@ -305,6 +305,9 @@ QUnit.module("whitespace agnostic", {
 
 		hslSp = "hsl(   232, 48%,    81% )";
 		hsl = "hsl(232,48%,81%)";
+
+		namedSp = "    burlywood ";
+		named = "burlywood";
 	}
 });
 QUnit.test("rgb2rgb", function(assert) {
@@ -316,6 +319,11 @@ QUnit.test("rgb2hex", function(assert) {
 QUnit.test("rgb2hsl", function(assert) {
 	assert.deepEqual(rgbSp.toHSLArray(), rgb.toHSLArray(), "whitespace ignored");
 });
+QUnit.test("rgb2named", function(assert) {
+	var _rgbSp = "rgb(    240 , 128, 128  )";
+	var _rgb = "rgb(240,128,128)";
+	assert.deepEqual(_rgbSp.toNamed(), _rgb.toNamed(), "whitespace ignored");
+});
 QUnit.test("hsl2rgb", function(assert) {
 	assert.deepEqual(hslSp.toRGBArray(), hsl.toRGBArray(), "whitespace ignored");
 });
@@ -324,6 +332,23 @@ QUnit.test("hsl2hex", function(assert) {
 });
 QUnit.test("hsl2hsl", function(assert) {
 	assert.deepEqual(hslSp.toHSLArray(), hsl.toHSLArray(), "whitespace ignored");
+});
+QUnit.test("hsl2named", function(assert) {
+	var _hslSp = "hsl(  90 , 100% , 50%     )";
+	var _hsl = "hsl(90,100%,50%)";
+	assert.deepEqual(_hslSp.toNamed(), _hsl.toNamed(), "whitespace ignored");
+});
+QUnit.test("named2rgb", function(assert) {
+	assert.deepEqual(namedSp.toRGBArray(), named.toRGBArray(), "whitespace ignored");
+});
+QUnit.test("named2hex", function(assert) {
+	assert.deepEqual(namedSp.toHexArray(), named.toHexArray(), "whitespace ignored");
+});
+QUnit.test("named2hsl", function(assert) {
+	assert.deepEqual(namedSp.toHSLArray(), named.toHSLArray(), "whitespace ignored");
+});
+QUnit.test("named2named", function(assert) {
+	assert.deepEqual(namedSp.toNamed(), named.toNamed(), "whitespace ignored");
 });
 
 QUnit.module("ignore extra zeroes", {
