@@ -98,13 +98,13 @@ QUnit.test("hsl2hsl (reflexive)", function(assert) {
 
 QUnit.module("Reflexive conversions", {
 	setup: function() {
-		var r = Math.floor(Math.random() * 255);
-		var g = Math.floor(Math.random() * 255);
-		var b = Math.floor(Math.random() * 255);
+		var r = 85;
+		var g = 51;
+		var b = 17;
 
-		var h = Math.floor(Math.random() * 360);
-		var s = Math.floor(Math.random() * 100);
-		var l = Math.floor(Math.random() * 100);		
+		var h = 72;
+		var s = 20;
+		var l = 50;
 
 		rgb = "rgb(" + r + "," + g + "," + b + ")";
 		hex = "#" + Math.random().toString(16).substring(2, 8);
@@ -132,8 +132,8 @@ QUnit.test("hsl2hex2hsl", function(assert) {
 
 QUnit.module("rgb percentage handling", {
 	setup: function() {
-		rgb = "rgb(51,129,203)";
-		rgbP = "rgb(0.2%,0.50588%,0.79608%)";
+		rgb = "rgb(51,102,153)";
+		rgbP = "rgb(20%,40%,60%)";
 	}
 });
 QUnit.test("rgb2rgb", function(assert) {
@@ -181,7 +181,7 @@ QUnit.test("3hex === 6hex-equiv", function(assert) {
 QUnit.module("hue wrapping");
 QUnit.test("hue > 360", function(assert) {
 	var hwrap = "hsl(427,50%,50%)";
-	assert.deepEqual(hwrap.toHSLArray(), 67, "expected hue = 67");
+	assert.deepEqual(hwrap.toHSLArray()[0], 67, "expected hue = 67");
 });
 QUnit.test("hue > 2*360", function(assert) {
 	var hwrap = "hsl(823,50%,50%)";

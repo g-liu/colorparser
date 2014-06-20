@@ -14,7 +14,7 @@ String.prototype.toRGBArray = function(usePercents) {
 	// convert from appropriate color space to RGB
 	switch(type) {
 		case 1: // RGB
-			var rgb = this.match(/\d{1,3}%?/gi);
+			var rgb = this.match(/\d+((\.\d+)?%)?|\.\d+%/g);
 			var asPercent = (rgb[0].charAt(rgb[0].length - 1) === "%")
 			for(var i = 0; i < rgb.length; i++) {
 				rgb[i] = parseInt(rgb[i], 10);
@@ -28,7 +28,7 @@ String.prototype.toRGBArray = function(usePercents) {
 			rgbArray = rgb.slice(0, 3);
 			break;
 		case 2: // HSL
-			var hsl = this.match(/-?(\d+(\.\d+)?%?|\.\d+%?)/gi);
+			var hsl = this.match(/-?(\d+(\.\d+)?%?|\.\d+%?)/g);
 			// normalize
 			hsl[0] = ((parseFloat(hsl[0], 10) % 360) + 360) % 360;
 			hsl[1] = Math.max(Math.min(100, parseFloat(hsl[1], 10)), 0) / 100;
@@ -120,32 +120,26 @@ String.prototype.toHSL = function() {
 	};
 }
 
-/**
- * http://axonflux.com/handy-rgb-to-hsl-and-rgb-to-hsv-color-model-c
- */
 String.prototype.toHSLArray = function() {
-	var rgb = this.toRGBArray(true);
-	var r = rgb[0], g = rgb[1], b = rgb[2];
-
-	var max = Math.max(r, g, b), min = Math.min(r, g, b);
+	var rgb = this.toRGBArray();
+    var r = rgb[0] / 255, g = rgb[1] / 255, b = rgb[2] / 255;
+    var max = Math.max(r, g, b), min = Math.min(r, g, b);
     var h, s, l = (max + min) / 2;
-	
-	if(max === min) {
-        h = s = 0;
-    }
-    else {
+
+    if(max === min) {
+        h = s = 0; // achromatic
+    } else {
         var d = max - min;
         s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
         switch(max) {
             case r: h = (g - b) / d + (g < b ? 6 : 0); break;
             case g: h = (b - r) / d + 2; break;
             case b: h = (r - g) / d + 4; break;
-            default: h = 0; break;
         }
         h /= 6;
     }
 
-    return [h * 360, s * 100, l * 100];
+    return [h*360, s*100, l*100];
 }
 
 String.prototype.toHSLString = function() {
@@ -179,6 +173,7 @@ function getType() {
 	function isRGB() {
 		// preliminary "loose" regex match
 		if(this.match(/^rgb\(\s*((\d+((\.\d+)?%)?|\.\d+%)\s*,\s*){2}(\d+((\.\d+)?%)?|\.\d+%)\s*\)$/i)) {
+			// ^rgba?\(\s*((\d+((\.\d+)?%)?|\.\d+%)\s*,\s*){2}(\d+((\.\d+)?%)?|\.\d+%)\s*(,\s*\d*\.?\d+\s*)?\)$
 			var nums = this.match(/\d+((\.\d+)?%)?|\.\d+%/gi);
 			if(!nums || !nums.length || nums.length != 3) {
 				return false;
@@ -204,6 +199,7 @@ function getType() {
 	function isHSL() {
 		// preliminary "loose" regex match
 		if(this.match(/^hsl\(\s*-?(\d+(\.\d+)?|\.\d+)(\s*,\s*-?(\d+(\.\d+)?%|\.\d+%)){2}\s*\)$/i)) {
+			// ^hsla?\(\s*-?(\d+(\.\d+)?|\.\d+)(\s*,\s*-?(\d+(\.\d+)?%|\.\d+%)){2}\s*(,\s*\d*\.?\d+\s*)?\)$
 			var nums = this.match(/\d+(\.\d+)?%?|\.\d+%?/gi);
 			if(!nums || !nums.length || nums.length !== 3) {
 				return false;
