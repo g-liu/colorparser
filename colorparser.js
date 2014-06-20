@@ -1,3 +1,4 @@
+(function() {
 String.prototype.toRGB = function(usePercents) {
 	var _rgb = this.toRGBArray(usePercents);
 	return rgb = {
@@ -165,58 +166,60 @@ function getType() {
 	else {
 		throw("Not a color: '" + this + "' is not a color.");
 	}
-
-	function isHex() {
-		return this.match(/^#?[A-F0-9]{3}([A-F0-9]{3})?$/i);
-	}
-
-	function isRGB() {
-		// preliminary "loose" regex match
-		if(this.match(/^rgb\(\s*((\d+((\.\d+)?%)?|\.\d+%)\s*,\s*){2}(\d+((\.\d+)?%)?|\.\d+%)\s*\)$/i)) {
-			// ^rgba?\(\s*((\d+((\.\d+)?%)?|\.\d+%)\s*,\s*){2}(\d+((\.\d+)?%)?|\.\d+%)\s*(,\s*\d*\.?\d+\s*)?\)$
-			var nums = this.match(/\d+((\.\d+)?%)?|\.\d+%/gi);
-			if(!nums || !nums.length || nums.length != 3) {
-				return false;
-			}
-
-			// check format of each
-			var usePercent = (nums[0].charAt(nums[0].length - 1) === "%");
-			for(var i = 0; i < 3; i++) {
-				var numInt = parseFloat(nums[i], 10);
-				if(usePercent && (nums[i].charAt(nums[i].length - 1) !== "%" || numInt < 0 || numInt > 100)) {
-					return false;
-				}
-				else if(!usePercent && nums[i].charAt(nums[i].length - 1) === "%" || numInt < 0 || numInt > 255) {
-					return false;
-				}
-			}
-			return true;
-		}
-
-		return false;
-	}
-
-	function isHSL() {
-		// preliminary "loose" regex match
-		if(this.match(/^hsl\(\s*-?(\d+(\.\d+)?|\.\d+)(\s*,\s*-?(\d+(\.\d+)?%|\.\d+%)){2}\s*\)$/i)) {
-			// ^hsla?\(\s*-?(\d+(\.\d+)?|\.\d+)(\s*,\s*-?(\d+(\.\d+)?%|\.\d+%)){2}\s*(,\s*\d*\.?\d+\s*)?\)$
-			var nums = this.match(/\d+(\.\d+)?%?|\.\d+%?/gi);
-			if(!nums || !nums.length || nums.length !== 3) {
-				return false;
-			}
-
-			// check first value (hue) separately
-			if(nums[0].charAt(nums[0].length - 1) === "%") {
-				return false;
-			}
-			for(var i = 1; i < 3; i++) {
-				if(nums[i].charAt(nums[i].length - 1) !== "%") {
-					return false;
-				}
-			}
-			return true;
-		}
-
-		return false;
-	}
 }
+
+function isHex() {
+	return this.match(/^#?[A-F0-9]{3}([A-F0-9]{3})?$/i);
+}
+
+function isRGB() {
+	// preliminary "loose" regex match
+	if(this.match(/^rgb\(\s*((\d+((\.\d+)?%)?|\.\d+%)\s*,\s*){2}(\d+((\.\d+)?%)?|\.\d+%)\s*\)$/i)) {
+		// ^rgba?\(\s*((\d+((\.\d+)?%)?|\.\d+%)\s*,\s*){2}(\d+((\.\d+)?%)?|\.\d+%)\s*(,\s*\d*\.?\d+\s*)?\)$
+		var nums = this.match(/\d+((\.\d+)?%)?|\.\d+%/gi);
+		if(!nums || !nums.length || nums.length != 3) {
+			return false;
+		}
+
+		// check format of each
+		var usePercent = (nums[0].charAt(nums[0].length - 1) === "%");
+		for(var i = 0; i < 3; i++) {
+			var numInt = parseFloat(nums[i], 10);
+			if(usePercent && (nums[i].charAt(nums[i].length - 1) !== "%" || numInt < 0 || numInt > 100)) {
+				return false;
+			}
+			else if(!usePercent && nums[i].charAt(nums[i].length - 1) === "%" || numInt < 0 || numInt > 255) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	return false;
+}
+
+function isHSL() {
+	// preliminary "loose" regex match
+	if(this.match(/^hsl\(\s*-?(\d+(\.\d+)?|\.\d+)(\s*,\s*-?(\d+(\.\d+)?%|\.\d+%)){2}\s*\)$/i)) {
+		// ^hsla?\(\s*-?(\d+(\.\d+)?|\.\d+)(\s*,\s*-?(\d+(\.\d+)?%|\.\d+%)){2}\s*(,\s*\d*\.?\d+\s*)?\)$
+		var nums = this.match(/\d+(\.\d+)?%?|\.\d+%?/gi);
+		if(!nums || !nums.length || nums.length !== 3) {
+			return false;
+		}
+
+		// check first value (hue) separately
+		if(nums[0].charAt(nums[0].length - 1) === "%") {
+			return false;
+		}
+		for(var i = 1; i < 3; i++) {
+			if(nums[i].charAt(nums[i].length - 1) !== "%") {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	return false;
+}
+
+})();
