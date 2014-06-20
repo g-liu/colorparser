@@ -32,6 +32,7 @@ Three color spaces are available:
 * RGB (Red-Green-Blue)
 * Hex (Hexadecimal)
 * HSL (Hue-Saturation-Luminance)
+* Named (CSS standard + X11 colors)
 
 Three output formats are available:
 
@@ -44,10 +45,13 @@ Three output formats are available:
   - for HSL: `[h, s, l]`
 * String (a valid CSS color string)
 
+Note that `.toNamed()` will only return a String, as that is the only output format that makes sense.
+
 To convert a color to another color space, with an optional output format:
 
     var string = "a valid color string here";
     string.to<<colorspace>><<outputformat>>();
+    // Exception: .toNamed() will return a CSS color name if available.
 
 If `<<outputformat>>` is not specified, defaults to returning a JSON object.
 
@@ -68,6 +72,7 @@ The library supports a subset of valid CSS colors.
   - `xxx`
   - `xxxxxx`
 * *HSL:* `hsl(###, ###%, ###%)`
+* *Named:* `<<name of color>>`, British spellings supported. See [Color Keywords (MDN)](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value#Color_keywords) for a list of colors
 
 An invalid color format (e.g. `rgb(256,54,128)` or `#34fc`) will result in an error, for any conversion.
 
