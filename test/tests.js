@@ -1,3 +1,4 @@
+QUnit.config.testTimeout = 1000;
 QUnit.module("color black", {
 	setup: function() {
 		rgb = "rgb(0,0,0)";
@@ -112,22 +113,22 @@ QUnit.module("Reflexive conversions", {
 	}
 });
 QUnit.test("rgb2hex2rgb", function(assert) {
-	assert.deepEqual(rgb.toHexString().toRGBString(), rgb, "Not equal to self!");
+	assert.deepEqual(rgb.toHexString().toRGBString(), rgb, "rgb -> hex -> rgb conversion preserved");
 });
 QUnit.test("rgb2hsl2rgb", function(assert) {
-	assert.deepEqual(rgb.toHSLString().toRGBString(), rgb, "Not equal to self!");
+	assert.deepEqual(rgb.toHSLString().toRGBString(), rgb, "rgb -> hsl -> rgb conversion preserved");
 });
 QUnit.test("hex2rgb2hex", function(assert) {
-	assert.deepEqual(hex.toRGBString().toHexString(), hex, "Not equal to self!");
+	assert.deepEqual(hex.toRGBString().toHexString(), hex, "hex -> rgb -> hex conversion preserved");
 });
 QUnit.test("hex2hsl2hex", function(assert) {
-	assert.deepEqual(hex.toHSLString().toHexString(), hex, "Not equal to self!");
+	assert.deepEqual(hex.toHSLString().toHexString(), hex, "hex -> hsl -> hex conversion preserved");
 });
 QUnit.test("hsl2rgb2hsl", function(assert) {
-	assert.deepEqual(hsl.toRGBString().toHSLString(), hsl, "Not equal to self!");
+	assert.deepEqual(hsl.toRGBString().toHSLString(), hsl, "hsl -> rgb -> hsl conversion preserved");
 });
 QUnit.test("hsl2hex2hsl", function(assert) {
-	assert.deepEqual(hsl.toHexString().toHSLString(), hsl, "Not equal to self!");
+	assert.deepEqual(hsl.toHexString().toHSLString(), hsl, "hsl -> hex -> hsl conversion preserved");
 });
 
 QUnit.module("rgb percentage handling", {
@@ -137,98 +138,98 @@ QUnit.module("rgb percentage handling", {
 	}
 });
 QUnit.test("rgb2rgb", function(assert) {
-	assert.deepEqual(rgbP.toRGBArray(), rgb.toRGBArray(), "percent not handled correctly!");
+	assert.deepEqual(rgbP.toRGBArray(), rgb.toRGBArray(), "all percents handled correctly in rgb conversion");
 });
 QUnit.test("rgb2hex", function(assert) {
-	assert.deepEqual(rgbP.toHexArray(), rgb.toHexArray(), "percent not handled correctly!");
+	assert.deepEqual(rgbP.toHexArray(), rgb.toHexArray(), "all percents handled correctly in hex conversion");
 });
 QUnit.test("rgb2hsl", function(assert) {
-	assert.deepEqual(rgbP.toHSLArray(), rgb.toHSLArray(), "percent not handled correctly!");
+	assert.deepEqual(rgbP.toHSLArray(), rgb.toHSLArray(), "all percents handled correctly in hsl conversion");
 });
 
 QUnit.module("hex format handling");
 QUnit.test("3hex-no-pre === 3hex", function(assert) {
 	var hex3 = "3a7";
 	var _hex3 = "#3a7";
-	assert.deepEqual(hex3.toRGBArray(), _hex3.toRGBArray(), "RGB arrays not equal!");
+	assert.deepEqual(hex3.toRGBArray(), _hex3.toRGBArray(), "hex -> rgb === #hex -> rgb");
 });
 QUnit.test("6hex-no-pre === 6hex", function(assert) {
 	var hex6 = "8acf40";
 	var _hex6 = "#8acf40";
-	assert.deepEqual(hex6.toRGBArray(), _hex6.toRGBArray(), "RGB arrays not equal!");
+	assert.deepEqual(hex6.toRGBArray(), _hex6.toRGBArray(), "hheexx -> rgb === #hheexx -> rgb");
 });
 QUnit.test("3hex-no-pre === 6hex-equiv-no-pre", function(assert) {
 	var hex3 = "80c";
 	var hex6Equiv = "8800cc";
-	assert.deepEqual(hex3.toRGBArray(), hex6Equiv.toRGBArray(), "RGB arrays not equal!");
+	assert.deepEqual(hex3.toRGBArray(), hex6Equiv.toRGBArray(), "hex -> rgb === hheexx -> rgb");
 });
 QUnit.test("3hex-no-pre === 6hex-equiv", function(assert) {
 	var hex3 = "80c";
 	var _hex6Equiv = "#8800cc";
-	assert.deepEqual(hex3.toRGBArray(), _hex6Equiv.toRGBArray(), "RGB arrays not equal!");
+	assert.deepEqual(hex3.toRGBArray(), _hex6Equiv.toRGBArray(), "hex -> rgb === #hheexx -> rgb");
 });
 QUnit.test("3hex === 6hex-equiv-no-pre", function(assert) {
 	var _hex3 = "#80c";
 	var hex6Equiv = "8800cc";
-	assert.deepEqual(_hex3.toRGBArray(), hex6Equiv.toRGBArray(), "RGB arrays not equal!");
+	assert.deepEqual(_hex3.toRGBArray(), hex6Equiv.toRGBArray(), "#hex -> rgb === hheexx -> rgb");
 });
 QUnit.test("3hex === 6hex-equiv", function(assert) {
 	var _hex3 = "#80c";
 	var _hex6Equiv = "#8800cc";
-	assert.deepEqual(_hex3.toRGBArray(), _hex6Equiv.toRGBArray(), "RGB arrays not equal!");
+	assert.deepEqual(_hex3.toRGBArray(), _hex6Equiv.toRGBArray(), "#hex -> rgb === #hheexx -> rgb");
 });
 
 QUnit.module("hue wrapping");
 QUnit.test("hue > 360", function(assert) {
 	var hwrap = "hsl(427,50%,50%)";
-	assert.deepEqual(hwrap.toHSLArray()[0], 67, "expected hue = 67");
+	assert.deepEqual(hwrap.toHSLArray()[0], 67, "hue wraps to 67");
 });
 QUnit.test("hue > 2*360", function(assert) {
 	var hwrap = "hsl(823,50%,50%)";
-	assert.deepEqual(hwrap.toHSLArray()[0], 103, "expected hue = 103");
+	assert.deepEqual(hwrap.toHSLArray()[0], 103, "hue wraps to 103");
 });
 QUnit.test("hue < 0", function(assert) {
 	var hwrap = "hsl(-284,50%,50%)";
-	assert.deepEqual(hwrap.toHSLArray()[0], 76, "expected hue = 76");
+	assert.deepEqual(hwrap.toHSLArray()[0], 76, "hue wraps to 76");
 });
 QUnit.test("hue < -360", function(assert) {
 	var hwrap = "hsl(-488,50%,50%)";
-	assert.deepEqual(hwrap.toHSLArray()[0], 232, "expected hue = 232");
+	assert.deepEqual(hwrap.toHSLArray()[0], 232, "hue wraps to 232");
 });
 QUnit.test("hue modulus test - positive hues", function(assert) {
 	var hwrap1 = "hsl(888,50%,50%)";
 	var hwrap2 = "hsl(528,50%,50%)";
-	assert.deepEqual(hwrap1.toHSLArray()[0], hwrap2.toHSLArray()[0], "both hues should equal 168");
+	assert.deepEqual(hwrap1.toHSLArray()[0], hwrap2.toHSLArray()[0], "both hues wrap to 168");
 });
 QUnit.test("hue modulus test - negative hues", function(assert) {
 	var hwrap1 = "hsl(-1534,50%,50%)";
 	var hwrap2 = "hsl(-814,50%,50%)";
-	assert.deepEqual(hwrap1.toHSLArray()[0], hwrap2.toHSLArray()[0], "both hues should equal 266");
+	assert.deepEqual(hwrap1.toHSLArray()[0], hwrap2.toHSLArray()[0], "both hues(-) wrap to 266");
 });
 QUnit.test("hue modulus test - positive and negative hues", function(assert) {
 	var hwrap1 = "hsl(731,50%,50%)";
 	var hwrap2 = "hsl(-349,50%,50%)";
-	assert.deepEqual(hwrap1.toHSLArray()[0], hwrap2.toHSLArray()[0], "both hues should equal 11");
+	assert.deepEqual(hwrap1.toHSLArray()[0], hwrap2.toHSLArray()[0], "both hues wrap to 11");
 });
 
 QUnit.module("saturation snapping");
 QUnit.test("snap sat to 100", function(assert) {
 	var ssnap = "hsl(241,437%,50%)";
-	assert.deepEqual(ssnap.toHSLArray()[1], 100, "sat should snap to 100");
+	assert.deepEqual(ssnap.toHSLArray()[1], 100, "sat snaps to 100");
 });
 QUnit.test("snap sat to 0", function(assert) {
 	var ssnap = "hsl(241,-77%,50%)";
-	assert.deepEqual(ssnap.toHSLArray()[1], 0, "sat should snap to 100");
+	assert.deepEqual(ssnap.toHSLArray()[1], 0, "sat snaps to 0");
 });
 
 QUnit.module("luminance snapping");
 QUnit.test("snap lum to 100", function(assert) {
 	var lsnap = "hsl(241,50%,820%)";
-	assert.deepEqual(lsnap.toHSLArray()[2], 100, "lum should snap to 100");
+	assert.deepEqual(lsnap.toHSLArray()[2], 100, "lum snaps to 100");
 });
 QUnit.test("snap lum to 0", function(assert) {
 	var lsnap = "hsl(241,50%,-1111%)";
-	assert.deepEqual(lsnap.toHSLArray()[2], 0, "lum should snap to 0");
+	assert.deepEqual(lsnap.toHSLArray()[2], 0, "lum snaps to 0");
 });
 
 QUnit.module("whitespace agnostic", {
@@ -241,22 +242,22 @@ QUnit.module("whitespace agnostic", {
 	}
 });
 QUnit.test("rgb2rgb", function(assert) {
-	assert.deepEqual(rgbSp.toRGBArray(), rgb.toRGBArray(), "whitespace not ignored!");
+	assert.deepEqual(rgbSp.toRGBArray(), rgb.toRGBArray(), "whitespace ignored");
 });
 QUnit.test("rgb2hex", function(assert) {
-	assert.deepEqual(rgbSp.toHexArray(), rgb.toHexArray(), "whitespace not ignored!");
+	assert.deepEqual(rgbSp.toHexArray(), rgb.toHexArray(), "whitespace ignored");
 });
 QUnit.test("rgb2hsl", function(assert) {
-	assert.deepEqual(rgbSp.toHSLArray(), rgb.toHSLArray(), "whitespace not ignored!");
+	assert.deepEqual(rgbSp.toHSLArray(), rgb.toHSLArray(), "whitespace ignored");
 });
 QUnit.test("hsl2rgb", function(assert) {
-	assert.deepEqual(hslSp.toRGBArray(), hsl.toRGBArray(), "whitespace not ignored!");
+	assert.deepEqual(hslSp.toRGBArray(), hsl.toRGBArray(), "whitespace ignored");
 });
 QUnit.test("hsl2hex", function(assert) {
-	assert.deepEqual(hslSp.toHexArray(), hsl.toHexArray(), "whitespace not ignored!");
+	assert.deepEqual(hslSp.toHexArray(), hsl.toHexArray(), "whitespace ignored");
 });
 QUnit.test("hsl2hsl", function(assert) {
-	assert.deepEqual(hslSp.toHSLArray(), hsl.toHSLArray(), "whitespace not ignored!");
+	assert.deepEqual(hslSp.toHSLArray(), hsl.toHSLArray(), "whitespace ignored");
 });
 
 QUnit.module("ignore extra zeroes", {
@@ -268,22 +269,22 @@ QUnit.module("ignore extra zeroes", {
 	}
 });
 QUnit.test("rgb2rgb", function(assert) {
-	assert.deepEqual(rgb0.toRGBArray(), rgb.toRGBArray(), "padded zeroes not ignored!");
+	assert.deepEqual(rgb0.toRGBArray(), rgb.toRGBArray(), "padded zeroes ignored");
 });
 QUnit.test("rgb2hex", function(assert) {
-	assert.deepEqual(rgb0.toHexArray(), rgb.toHexArray(), "padded zeroes not ignored!");
+	assert.deepEqual(rgb0.toHexArray(), rgb.toHexArray(), "padded zeroes ignored");
 });
 QUnit.test("rgb2hsl", function(assert) {
-	assert.deepEqual(rgb0.toHSLArray(), rgb.toHSLArray(), "padded zeroes not ignored!");
+	assert.deepEqual(rgb0.toHSLArray(), rgb.toHSLArray(), "padded zeroes ignored");
 });
 QUnit.test("hsl2rgb", function(assert) {
-	assert.deepEqual(hsl0.toRGBArray(), hsl.toRGBArray(), "padded zeroes not ignored!");
+	assert.deepEqual(hsl0.toRGBArray(), hsl.toRGBArray(), "padded zeroes ignored");
 });
 QUnit.test("hsl2hex", function(assert) {
-	assert.deepEqual(hsl0.toHexArray(), hsl.toHexArray(), "padded zeroes not ignored!");
+	assert.deepEqual(hsl0.toHexArray(), hsl.toHexArray(), "padded zeroes ignored");
 });
 QUnit.test("hsl2hsl", function(assert) {
-	assert.deepEqual(hsl0.toHSLArray(), hsl.toHSLArray(), "padded zeroes not ignored!");
+	assert.deepEqual(hsl0.toHSLArray(), hsl.toHSLArray(), "padded zeroes ignored");
 });
 
 // TODO: test filtering of invalid colors
