@@ -5,7 +5,7 @@ A simple, lightweight, dependency-free JavaScript library to handle color conver
 
 ## Installation
 
-Download the `colorparser.js` file into your web directory, then
+Download the `colorparser.js` file into your directory, then
 
 	<script src="path/to/colorparser.js" type="text/javascript"></script>
 
@@ -22,17 +22,18 @@ As easy as
 	"a3f".toRGBString(); // works with different hex color formats
 	"rgb( 33, 29, 255 )".toHSL(); // space friendly
 	"hsl(0, 22%, 84%)".toHexArray(); // Yep, we support HSL
+  "linen".toHex(); // Supports CSS Named colors
 
 ## Documentation
 
 _Documentation will be moved to a GitHub page soon. For now, it resides here._
 
-Three color spaces are available:
+Four color spaces are available:
 
 * RGB (Red-Green-Blue)
 * Hex (Hexadecimal)
 * HSL (Hue-Saturation-Luminance)
-* Named (CSS standard + X11 colors)
+* Named (CSS standard + X11 colors)[https://developer.mozilla.org/en-US/docs/Web/CSS/color_value#Color_keywords]
 
 Three output formats are available:
 
@@ -51,9 +52,8 @@ To convert a color to another color space, with an optional output format:
 
     var string = "a valid color string here";
     string.to<<colorspace>><<outputformat>>();
-    // Exception: .toNamed() will return a CSS color name if available.
 
-If `<<outputformat>>` is not specified, defaults to returning a JSON object.
+If `<<outputformat>>` is not specified, defaults to returning a JSON object. _(Exception: `.toNamed()` will return a CSS color name if available.)_
 
 ### Examples
 
@@ -64,15 +64,15 @@ See "Examples" section.
 The library supports a subset of valid CSS colors.
 
 * *RGB:*
-  - `rgb(###, ###, ###)`
-  - `rgb(###%, ###%, ###%)`
+  - `rgb(###, ###, ###)`. integers from [0..255],
+  - `rgb(###%, ###%, ###%)`. percents from [0..100], decimals supported
 * *Hex:*
   - `#xxx`
   - `#xxxxxx`
   - `xxx`
   - `xxxxxx`
-* *HSL:* `hsl(###, ###%, ###%)`
-* *Named:* `<<name of color>>`, British spellings supported. See [Color Keywords (MDN)](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value#Color_keywords) for a list of colors
+* *HSL:* `hsl(###, ###%, ###%)`. all values decimal supported. hue will wrap to [0..360), sat/lum will be constrained to [0..100]
+* *Named:* `<<name of color>>`, British spelling "grey" supported. See [Color Keywords (MDN)](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value#Color_keywords) for a list of colors
 
 An invalid color format (e.g. `rgb(256,54,128)` or `#34fc`) will result in an error, for any conversion.
 
@@ -84,5 +84,3 @@ Coming soon.
 
 * Support transparency (`rgba()`, `hsla()`)
   - _Caveat_: HEX color codes do not have transparency.
-* Support CSS Named colors and X11 colors (e.g. `aliceblue`, `red`)
-* Support Pantone colors (a long shot; 	this may need a library of its own!)
