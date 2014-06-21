@@ -153,6 +153,162 @@ QUnit.test("named2named (reflexive)", function(assert) {
 	assert.deepEqual(res, named, named + " is " + named);
 });
 
+QUnit.module("RGB red value correctness");
+QUnit.test("from rgb", function(assert) {
+	assert.deepEqual("rgb(37,41,23)".toRGBArray()[0], 37, "red value is 37");
+	assert.deepEqual("rgb(215,41,23)".toRGBArray()[0], 215, "red value is 215");
+	assert.deepEqual("rgb(83%,22%,100%)".toRGBArray()[0], 211.65, "red value is 211.65");
+});
+QUnit.test("from hex", function(assert) {
+	assert.deepEqual("#2d8821".toRGBArray()[0], 45, "red value is 45 (0x2d)");
+	assert.deepEqual("#02f204".toRGBArray()[0], 2, "red value is 2 (0x02)");
+	assert.deepEqual("#ff8e7c".toRGBArray()[0], 255, "red value is 255 (0xff)");
+});
+QUnit.test("from hsl", function(assert) {
+	assert.deepEqual("hsl(0,100%,50%)".toRGBArray()[0], 255, "red value is 255");
+});
+QUnit.test("from named", function(assert) {
+	assert.deepEqual("red".toRGBArray()[0], 255, "red value is 255");
+	assert.deepEqual("darkorange".toRGBArray()[0], 255, "red value is 255");
+	assert.deepEqual("gold".toRGBArray()[0], 255, "red value is 255");
+	assert.deepEqual("maroon".toRGBArray()[0], 128, "red value is 128");
+	assert.deepEqual("thistle".toRGBArray()[0], 216, "red value is 216");
+});
+
+QUnit.module("RGB green value correctness");
+QUnit.test("from rgb", function(assert) {
+	assert.deepEqual("rgb(37,41,23)".toRGBArray()[1], 41, "green value is 41");
+	assert.deepEqual("rgb(215,88,23)".toRGBArray()[1], 88, "green value is 88");
+	assert.deepEqual("rgb(83%,22%,100%)".toRGBArray()[1], 56.1, "green value is 56.1");
+});
+QUnit.test("from hex", function(assert) {
+	assert.deepEqual("#2d8821".toRGBArray()[1], 136, "green value is 136 (0x88)");
+	assert.deepEqual("#02f204".toRGBArray()[1], 242, "green value is 242 (0xf2)");
+	assert.deepEqual("#ff8e7c".toRGBArray()[1], 142, "green value is 142 (0x8e)");
+});
+QUnit.test("from hsl", function(assert) {
+	assert.deepEqual("hsl(120,100%,50%)".toRGBArray()[1], 255, "green value is 255");
+});
+QUnit.test("from named", function(assert) {
+	assert.deepEqual("green".toRGBArray()[1], 128, "green value is 128");
+	assert.deepEqual("aquamarine".toRGBArray()[1], 255, "green value is 255");
+	assert.deepEqual("firebrick".toRGBArray()[1], 34, "green value is 34");
+	assert.deepEqual("darkslategray".toRGBArray()[1], 79, "green value is 79");
+	assert.deepEqual("darkolivegreen".toRGBArray()[1], 107, "green value is 107");
+});
+
+QUnit.module("RGB blue value correctness");
+QUnit.test("from rgb", function(assert) {
+	assert.deepEqual("rgb(37,41,23)".toRGBArray()[2], 23, "blue value is 23");
+	assert.deepEqual("rgb(215,88,99)".toRGBArray()[2], 99, "blue value is 99");
+	assert.deepEqual("rgb(83%,22%,100%)".toRGBArray()[2], 255, "blue value is 255");
+});
+QUnit.test("from hex", function(assert) {
+	assert.deepEqual("#2d8821".toRGBArray()[2], 33, "blue value is 33 (0x21)");
+	assert.deepEqual("#02f204".toRGBArray()[2], 4, "blue value is 4 (0x04)");
+	assert.deepEqual("#ff8e7c".toRGBArray()[2], 124, "blue value is 142 (0x7c)");
+});
+QUnit.test("from hsl", function(assert) {
+	assert.deepEqual("hsl(240,100%,50%)".toRGBArray()[2], 255, "blue value is 255");
+});
+QUnit.test("from named", function(assert) {
+	assert.deepEqual("blue".toRGBArray()[2], 255, "blue value is 255");
+	assert.deepEqual("lawngreen".toRGBArray()[2], 0, "blue value is 0");
+	assert.deepEqual("magenta".toRGBArray()[2], 255, "blue value is 255");
+	assert.deepEqual("midnightblue".toRGBArray()[2], 112, "blue value is 112");
+	assert.deepEqual("saddlebrown".toRGBArray()[2], 19, "blue value is 19");
+});
+
+QUnit.module("Hex red value correctness");
+QUnit.test("from rgb", function(assert) {
+	assert.deepEqual("rgb(37,41,23)".toHexArray()[0], "25", "red value is 0x25 (37)");
+	assert.deepEqual("rgb(215,41,23)".toHexArray()[0], "d7", "red value is 0xd7 (215)");
+	assert.deepEqual("rgb(83%,22%,100%)".toHexArray()[0], "d4", "red value is 0xd4 (212)");
+});
+QUnit.test("from hex", function(assert) {
+	assert.deepEqual("#2d8821".toHexArray()[0], "2d", "red value is 0x2d");
+	assert.deepEqual("#02f204".toHexArray()[0], "02", "red value is 0x02");
+	assert.deepEqual("#ff8e7c".toHexArray()[0], "ff", "red value is 0xff");
+});
+QUnit.test("from hsl", function(assert) {
+	assert.deepEqual("hsl(0,100%,50%)".toHexArray()[0], "ff", "red value is 0xff");
+});
+QUnit.test("from named", function(assert) {
+	assert.deepEqual("red".toHexArray()[0], "ff", "red value is 0xff");
+	assert.deepEqual("darkorange".toHexArray()[0], "ff", "red value is 0xff");
+	assert.deepEqual("gold".toHexArray()[0], "ff", "red value is 0xff");
+	assert.deepEqual("maroon".toHexArray()[0], "80", "red value is 0x80");
+	assert.deepEqual("thistle".toHexArray()[0], "d8", "red value is 0xd8");
+});
+
+QUnit.module("Hex green value correctness");
+QUnit.test("from rgb", function(assert) {
+	assert.deepEqual("rgb(37,41,23)".toHexArray()[1], "29", "green value is 0x29");
+	assert.deepEqual("rgb(215,88,23)".toHexArray()[1], "58", "green value is 0x58");
+	assert.deepEqual("rgb(83%,22%,100%)".toHexArray()[1], "38", "green value is 0x38");
+});
+QUnit.test("from hex", function(assert) {
+	assert.deepEqual("#2d8821".toHexArray()[1], "88", "green value is 0x88");
+	assert.deepEqual("#02f204".toHexArray()[1], "f2", "green value is 0xf2");
+	assert.deepEqual("#ff8e7c".toHexArray()[1], "8e", "green value is 0x8e");
+});
+QUnit.test("from hsl", function(assert) {
+	assert.deepEqual("hsl(120,100%,50%)".toHexArray()[1], "ff", "green value is 0xff");
+});
+QUnit.test("from named", function(assert) {
+	assert.deepEqual("green".toHexArray()[1], "80", "green value is 0x80");
+	assert.deepEqual("aquamarine".toHexArray()[1], "ff", "green value is 0xff");
+	assert.deepEqual("firebrick".toHexArray()[1], "22", "green value is 0x22");
+	assert.deepEqual("darkslategray".toHexArray()[1], "4f", "green value is 0x4f");
+	assert.deepEqual("darkolivegreen".toHexArray()[1], "6b", "green value is 0x6b");
+});
+
+QUnit.module("Hex blue value correctness");
+QUnit.test("from rgb", function(assert) {
+	assert.deepEqual("rgb(37,41,23)".toHexArray()[2], "17", "blue value is 0x17");
+	assert.deepEqual("rgb(215,88,99)".toHexArray()[2], "63", "blue value is 0x63");
+	assert.deepEqual("rgb(83%,22%,100%)".toHexArray()[2], "ff", "blue value is 0xff");
+});
+QUnit.test("from hex", function(assert) {
+	assert.deepEqual("#2d8821".toHexArray()[2], "21", "blue value is 0x21");
+	assert.deepEqual("#02f204".toHexArray()[2], "04", "blue value is 0x04");
+	assert.deepEqual("#ff8e7c".toHexArray()[2], "7c", "blue value is 0x7c");
+});
+QUnit.test("from hsl", function(assert) {
+	assert.deepEqual("hsl(240,100%,50%)".toHexArray()[2], "ff", "blue value is 0xff");
+});
+QUnit.test("from named", function(assert) {
+	assert.deepEqual("blue".toHexArray()[2], "ff", "blue value is 0xff");
+	assert.deepEqual("lawngreen".toHexArray()[2], "00", "blue value is 0x00");
+	assert.deepEqual("magenta".toHexArray()[2], "ff", "blue value is 0xff");
+	assert.deepEqual("midnightblue".toHexArray()[2], "70", "blue value is 0x70");
+	assert.deepEqual("saddlebrown".toHexArray()[2], "13", "blue value is 0x13");
+});
+
+QUnit.module("HSL hue correctness");
+QUnit.test("from rgb", function(assert) {
+	assert.deepEqual("rgb(37,41,23)".toHSLArray()[0], 73, "hue is 73");
+	assert.deepEqual("rgb(215,41,23)".toHSLArray()[0], 6, "hue is 6");
+	assert.deepEqual("rgb(80%,20%,100%)".toHSLArray()[0], 285, "hue is 285");
+});
+QUnit.test("from hex", function(assert) {
+	assert.deepEqual("#2d8821".toHSLArray()[0], 113, "hue is 113");
+	assert.deepEqual("#02f204".toHSLArray()[0], 121, "hue is 121");
+	assert.deepEqual("#ff8e7c".toHSLArray()[0], 8, "hue is 8");
+});
+QUnit.test("from hsl", function(assert) {
+	assert.deepEqual("hsl(27,35%,88%)".toHSLArray()[0], 27, "hue is 27");
+});
+QUnit.test("from named", function(assert) {
+	assert.deepEqual("red".toHSLArray()[0], 0, "hue is 0");
+	assert.deepEqual("darkorange".toHSLArray()[0], 33, "hue is 33");
+	assert.deepEqual("gold".toHSLArray()[0], 51, "hue is 51");
+	assert.deepEqual("maroon".toHSLArray()[0], 0, "hue is 0");
+	assert.deepEqual("thistle".toHSLArray()[0], 300, "hue is 300");
+});
+
+// TODO: rest of HSL components
+
 QUnit.module("Reflexive conversions", {
 	setup: function() {
 		var r = 85;
@@ -305,9 +461,6 @@ QUnit.module("whitespace agnostic", {
 
 		hslSp = "hsl(   232, 48%,    81% )";
 		hsl = "hsl(232,48%,81%)";
-
-		namedSp = "    burlywood ";
-		named = "burlywood";
 	}
 });
 QUnit.test("rgb2rgb", function(assert) {
@@ -338,18 +491,6 @@ QUnit.test("hsl2named", function(assert) {
 	var _hsl = "hsl(90,100%,50%)";
 	assert.deepEqual(_hslSp.toNamed(), _hsl.toNamed(), "whitespace ignored");
 });
-QUnit.test("named2rgb", function(assert) {
-	assert.deepEqual(namedSp.toRGBArray(), named.toRGBArray(), "whitespace ignored");
-});
-QUnit.test("named2hex", function(assert) {
-	assert.deepEqual(namedSp.toHexArray(), named.toHexArray(), "whitespace ignored");
-});
-QUnit.test("named2hsl", function(assert) {
-	assert.deepEqual(namedSp.toHSLArray(), named.toHSLArray(), "whitespace ignored");
-});
-QUnit.test("named2named", function(assert) {
-	assert.deepEqual(namedSp.toNamed(), named.toNamed(), "whitespace ignored");
-});
 
 QUnit.module("ignore extra zeroes", {
 	setup: function() {
@@ -379,3 +520,4 @@ QUnit.test("hsl2hsl", function(assert) {
 });
 
 // TODO: test filtering of invalid colors
+// TODO: Case insensitivity
