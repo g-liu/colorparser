@@ -23,6 +23,7 @@ As easy as
     "rgb( 33, 29, 255 )".toHSL(); // space friendly
     "hsl(0, 22%, 84%)".toHexArray(); // Yep, we support HSL
     "linen".toHex(); // Supports CSS Named colors
+    "rgba(31,177,29,0.48)".toHSLString(); // supports alpha transparency
 
 ## Documentation
 
@@ -35,15 +36,17 @@ Four color spaces are available:
 * HSL (Hue-Saturation-Luminance)
 * Named [CSS standard + X11 colors](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value#Color_keywords)
 
+RGB and HSL both support transparency (alpha).
+
 Three output formats are available:
 
 * (raw JSON)
-  - for RGB: `{"r": ###, "g": ###, "b": ###}`
+  - for RGB: `{"r": ###, "g": ###, "b": ###, "a": ##}`
   - for Hex: `{"r": "##", "g": "##", "b": "##"}`
-  - for HSL: `{"h": ###, "s": ###, "l": ###}`
+  - for HSL: `{"h": ###, "s": ###, "l": ###, "a": ##}`
 * Array
-  - for RGB, Hex: `[r, g, b]`
-  - for HSL: `[h, s, l]`
+  - for RGB, Hex: `[r, g, b, a]`
+  - for HSL: `[h, s, l, a]`
 * String (a valid CSS color string)
 
 Note that `.toNamed()` will only return a String, as that is the only output format that makes sense.
@@ -63,15 +66,20 @@ See "Examples" section.
 
 The library supports a subset of valid CSS colors.
 
-* *RGB:*
+* *RGB(A):*
   - `rgb(###, ###, ###)`. integers from [0..255],
   - `rgb(###%, ###%, ###%)`. percents from [0..100], decimals supported
+  - `rgba(###, ###, ###, ##)`. alpha = real numbers from [0..1]
+  - `rgba(###%, ###%, ###%, ##)`. same as above.
 * *Hex:*
   - `#xxx`
   - `#xxxxxx`
   - `xxx`
   - `xxxxxx`
-* *HSL:* `hsl(###, ###%, ###%)`. all values decimal supported. hue will wrap to [0..360), sat/lum will be constrained to [0..100]
+* *HSL:*
+  - `hsl(###, ###%, ###%)`. all values decimal supported. hue will wrap to [0..360), sat/lum will be constrained to [0..100]
+  - `hsla(###, ###%, ###%, ##)`. alpha = real numbers from [0..1]
+
 * *Named:* `<<name of color>>`, British spelling "grey" supported. See [Color Keywords (MDN)](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value#Color_keywords) for a list of colors
 
 An invalid color format (e.g. `rgb(256,54,128)` or `#34fc`) will result in an error, for any conversion.
@@ -79,8 +87,3 @@ An invalid color format (e.g. `rgb(256,54,128)` or `#34fc`) will result in an er
 ## Demo
 
 Coming soon.
-
-## Future
-
-* Support transparency (`rgba()`, `hsla()`)
-  - _Caveat_: HEX color codes do not have transparency.
