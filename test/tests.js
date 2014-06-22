@@ -519,5 +519,61 @@ QUnit.test("hsl2hsl", function(assert) {
 	assert.deepEqual(hsl0.toHSLArray(), hsl.toHSLArray(), "padded zeroes ignored");
 });
 
+QUnit.module("case insensitive", {
+	setup: function() {
+		this.rgb = "rgb(23%,88%,92.8%)";
+		this.hex = "#dabefc";
+		this.hsl = "hsl(27,49%,81%)";
+		this.named = "purple";
+	}
+});
+QUnit.test("rgb2rgb", function(assert) {
+	assert.deepEqual(this.rgb.toUpperCase().toRGBArray(), this.rgb.toRGBArray(), "rgb arrays equal");
+});
+QUnit.test("rgb2hex", function(assert) {
+	assert.deepEqual(this.rgb.toUpperCase().toHexArray(), this.rgb.toHexArray(), "hex arrays equal");
+});
+QUnit.test("rgb2hsl", function(assert) {
+	assert.deepEqual(this.rgb.toUpperCase().toHSLArray(), this.rgb.toHSLArray(), "hsl arrays equal");
+});
+QUnit.test("rgb2named", function(assert) {
+	assert.deepEqual(this.rgb.toUpperCase().toNamed(), this.rgb.toNamed(), "keyword names equal");
+});
+QUnit.test("hex2rgb", function(assert) {
+	assert.deepEqual(this.hex.toUpperCase().toRGBArray(), this.hex.toRGBArray(), "rgb arrays equal");
+});
+QUnit.test("hex2hex", function(assert) {
+	assert.deepEqual(this.hex.toUpperCase().toHexArray(), this.hex.toHexArray(), "hex arrays equal");
+});
+QUnit.test("hex2hsl", function(assert) {
+	assert.deepEqual(this.hex.toUpperCase().toHSLArray(), this.hex.toHSLArray(), "hsl arrays equal");
+});
+QUnit.test("hex2named", function(assert) {
+	assert.deepEqual(this.hex.toUpperCase().toNamed(), this.hex.toNamed(), "keyword names equal");
+});
+QUnit.test("hsl2rgb", function(assert) {
+	assert.deepEqual(this.hsl.toUpperCase().toRGBArray(), this.hsl.toRGBArray(), "rgb arrays equal");
+});
+QUnit.test("hsl2hex", function(assert) {
+	assert.deepEqual(this.hsl.toUpperCase().toHexArray(), this.hsl.toHexArray(), "hex arrays equal");
+});
+QUnit.test("hsl2hsl", function(assert) {
+	assert.deepEqual(this.hsl.toUpperCase().toHSLArray(), this.hsl.toHSLArray(), "hsl arrays equal");
+});
+QUnit.test("hsl2named", function(assert) {
+	assert.deepEqual(this.hsl.toUpperCase().toNamed(), this.hsl.toNamed(), "keyword names equal");
+});
+QUnit.test("named2rgb", function(assert) {
+	assert.deepEqual(this.named.toUpperCase().toRGBArray(), this.named.toRGBArray(), "rgb arrays equal");
+});
+QUnit.test("named2hex", function(assert) {
+	assert.deepEqual(this.named.toUpperCase().toHexArray(), this.named.toHexArray(), "hex arrays equal");
+});
+QUnit.test("named2hsl", function(assert) {
+	assert.deepEqual(this.named.toUpperCase().toHSLArray(), this.named.toHSLArray(), "hsl arrays equal");
+});
+QUnit.test("named2named", function(assert) {
+	assert.deepEqual(this.named.toUpperCase().toNamed(), this.hsl.toNamed(), "keyword names equal");
+});
+
 // TODO: test filtering of invalid colors
-// TODO: Case insensitivity
