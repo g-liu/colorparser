@@ -15,14 +15,14 @@ That's it.
 
 As easy as
 
-	"#fedcba".toRGB(); // { "r": 254, "g": 220, "b": 186 }
-	"rgb(33,68,128)".toHexString(); // "#214480"
-	    // want that without "#" prefix? .toHexString(false)
+    "#fedcba".toRGB(); // { "r": 254, "g": 220, "b": 186 }
+    "rgb(33,68,128)".toHexString(); // "#214480"
+    // want that without "#" prefix? .toHexString(false)
     
-	"a3f".toRGBString(); // works with different hex color formats
-	"rgb( 33, 29, 255 )".toHSL(); // space friendly
-	"hsl(0, 22%, 84%)".toHexArray(); // Yep, we support HSL
-  "linen".toHex(); // Supports CSS Named colors
+    "a3f".toRGBString(); // works with different hex color formats
+    "rgb( 33, 29, 255 )".toHSL(); // space friendly
+    "hsl(0, 22%, 84%)".toHexArray(); // Yep, we support HSL
+    "linen".toHex(); // Supports CSS Named colors
 
 ## Documentation
 
@@ -33,7 +33,7 @@ Four color spaces are available:
 * RGB (Red-Green-Blue)
 * Hex (Hexadecimal)
 * HSL (Hue-Saturation-Luminance)
-* Named (CSS standard + X11 colors)[https://developer.mozilla.org/en-US/docs/Web/CSS/color_value#Color_keywords]
+* Named [CSS standard + X11 colors](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value#Color_keywords)
 
 Three output formats are available:
 

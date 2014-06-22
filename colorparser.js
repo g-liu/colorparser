@@ -1,4 +1,8 @@
 (function() {
+
+/**
+ * Define String trim fallback
+ */
 String.prototype.trim = String.prototype.trim || function trim() { return this.replace(/^\s\s*/, '').replace(/\s\s*$/, ''); };
 
 String.prototype.toRGB = function(usePercents) {
@@ -6,84 +10,94 @@ String.prototype.toRGB = function(usePercents) {
 	return rgb = {
 		"r": _rgb[0],
 		"g": _rgb[1],
-		"b": _rgb[2]
+		"b": _rgb[2],
+		"a": _rgb[3]
 	};
 }
 
 String.prototype.toRGBArray = function(usePercents) {
-	var type = getType.call(this);
-	var rgbArray = [-1, -1, -1];
+	// var type = getType.call(this);
+	// var rgbArray = [-1, -1, -1];
 
-	// convert from appropriate color space to RGB
-	switch(type) {
-		case 1: // RGB
-			var rgb = this.match(/\d+((\.\d+)?%)?|\.\d+%/g);
-			var asPercent = (rgb[0].charAt(rgb[0].length - 1) === "%")
-			for(var i = 0; i < rgb.length; i++) {
-				rgb[i] = parseInt(rgb[i], 10);
-				if(asPercent && !usePercents) {
-					rgb[i] = Math.round(rgb[i] * 2.55);
+	var colorInfo = getColorSpace(this);
+	var rgb = [0, 0, 0, 1];
+
+	if(colorInfo.space === null) {
+		throw("Color \"" + colorInfo.color + "\" is not a valid color");
+	}
+	switch(colorInfo.space) {
+		case "named":
+			// go thru hex first
+			var hexArray = colorInfo.color.toHexArray();
+		case "hex":
+			var hexArray;
+			if(typeof hexArray === "undefined") {
+				hexArray = colorInfo.color;
+			}
+			for(var i = 0; i < 3; i++) {
+				rgb[i] = parseInt(hexArray[i], 16);
+			}
+			break;
+		case "rgba":
+			rgb[3] = colorInfo.color[3];
+		case "rgb":
+			var percentMode = typeof colorInfo.color[0] === "string" && colorInfo.color[0].charAt(colorInfo.color[0].length - 1) === "%";
+			for(var i = 0; i < 3; i++) {
+				var cFloat = parseFloat(colorInfo.color[i], 10);
+				rgb[i] = cFloat;
+				if(!usePercents && percentMode) {
+					rgb[i] *= 2.55;
 				}
-				else if(!asPercent && !!usePercents) {
+				else if(usePercents && !percentMode) {
 					rgb[i] /= 2.55;
 				}
 			}
-			rgbArray = rgb.slice(0, 3);
 			break;
-		case 2: // HSL
-			var hsl = this.match(/-?(\d+(\.\d+)?%?|\.\d+%?)/g);
+		case "hsla":
+			rgb[3] = colorInfo.color[3];
+		case "hsl":
 			// normalize
-			hsl[0] = ((parseFloat(hsl[0], 10) % 360) + 360) % 360;
-			hsl[1] = Math.max(Math.min(100, parseFloat(hsl[1], 10)), 0) / 100;
-			hsl[2] = Math.max(Math.min(100, parseFloat(hsl[2], 10)), 0) / 100;
+			var hsl = [];
+			hsl[0] = ((colorInfo.color[0] % 360) + 360) % 360;
+			hsl[1] = Math.max(Math.min(100, colorInfo.color[1], 10), 0) / 100;
+			hsl[2] = Math.max(Math.min(100, colorInfo.color[2], 10), 0) / 100;
 
 			var chroma = (1 - Math.abs(2 * hsl[2] - 1)) * hsl[1];
 			var _hue = hsl[0] / 60;
 			var x = chroma * (1 - Math.abs(_hue % 2 - 1));
-			var rgb = [0, 0, 0];
+			var _rgb = [0, 0, 0];
 			switch(Math.floor(_hue)) {
-				case 0: rgb = [chroma, x, 0]; break;
-				case 1: rgb = [x, chroma, 0]; break;
-				case 2: rgb = [0, chroma, x]; break;
-				case 3: rgb = [0, x, chroma]; break;
-				case 4: rgb = [x, 0, chroma]; break;
-				case 5: rgb = [chroma, 0, x]; break;
-				default: rgb = [0, 0, 0]; break;
+				case 0: _rgb = [chroma, x, 0]; break;
+				case 1: _rgb = [x, chroma, 0]; break;
+				case 2: _rgb = [0, chroma, x]; break;
+				case 3: _rgb = [0, x, chroma]; break;
+				case 4: _rgb = [x, 0, chroma]; break;
+				case 5: _rgb = [chroma, 0, x]; break;
+				default: _rgb = [0, 0, 0]; break;
 			}
-			for(var i = 0; i < rgb.length; i++) {
-				rgbArray[i] = rgb[i] + (hsl[2] - 0.5 * chroma);
+			for(var i = 0; i < 3; i++) {
+				rgb[i] = _rgb[i] + (hsl[2] - 0.5 * chroma);
 				if(!usePercents) {
-					rgbArray[i] = Math.round(rgbArray[i] * 255);
+					rgb[i] = Math.round(rgb[i] * 255);
 				}
 			}
 			break;
-		case 3: // Named
-			var hexVal = NAMED_TO_HEX[this.trim()];
-		case 0: // HEX
-		default: 
-			var hexVal = padHex(typeof hexVal === "undefined" ? this : hexVal);
-			var bigint = parseInt(hexVal, 16);
-			rgbArray[0] = ((bigint >> 16) & 255) / (!!usePercents ? 255 : 1);
-			rgbArray[1] = ((bigint >> 8) & 255) / (!!usePercents ? 255 : 1);
-			rgbArray[2] = (bigint & 255) / (!!usePercents ? 255 : 1);
-			break;
 	}
 
-	return rgbArray;
+	return rgb;
 }
 
 String.prototype.toRGBString = function(usePercents) {
-	if(!usePercents) {
-		return "rgb(" + this.toRGBArray().join(",") + ")";
+	var rgb = this.toRGBArray(usePercents);
+	var rgbString = "rgb" + (rgb[3] !== 1 ? "a" : "") + "("
+	if(usePercents) {
+		rgbString += rgb[0] + "%," + rgb[1] + "%," + rgb[2] + "%" + (rgb[3] !== 1 ? rgb[3] : "" ) + ")";
 	}
 	else {
-		var values = this.toRGBArray();
-		for(var i = 0; i < values.length; i++) {
-			values *= 100;
-			values += "%";
-		}
-		return "rgb(" + values.join(",") + ")";
+		rgb = (rgb[3] !== 1 ? rgb : rgb.slice(0, 3));
+		rgbString += rgb.toString() + ")";
 	}
+	return rgbString;
 }
 
 String.prototype.toHex = function() {
@@ -96,20 +110,63 @@ String.prototype.toHex = function() {
 }
 
 String.prototype.toHexArray = function() {
-	var rgb = this.toRGBArray();
-	var hexArray = [];
-	for(var i = 0; i < rgb.length; i++) {
-		hexArray[i] = ("00" + rgb[i].toString(16)).slice(-2);
+	var colorInfo = getColorSpace(this);
+	var hex = ["00", "00", "00"];
+	
+	if(colorInfo.space === null) {
+		throw("Color \"" + colorInfo.color + "\" is not a valid color");
+	}
+	switch(colorInfo.space) {
+		case "named":
+			var hexStr = padHex(NAMED_TO_HEX[colorInfo.color]);
+			var hex = [hexStr.substring(0, 2), hexStr.substring(2, 4), hexStr.substring(4, 6)];
+			break;
+		case "hex":
+			hex = colorInfo.color;
+			break;
+		case "rgba": // ignore alpha - hex doesn't support it anyway
+		case "rgb":
+			console.log(colorInfo);
+			var percentMode = typeof colorInfo.color[0] === "string" && colorInfo.color[0].charAt(colorInfo.color[0].length - 1) === "%";
+			for(var i = 0; i < 3; i++) {
+				var cFloat = parseFloat(colorInfo.color[i], 10);
+				hex[i] = ("00" + Math.round(cFloat * (percentMode ? 2.55 : 1)).toString(16)).slice(-2);
+			}
+			break;
+		case "hsla":
+		case "hsl":
+			var hsl = [];
+			hsl[0] = ((colorInfo.color[0] % 360) + 360) % 360;
+			hsl[1] = Math.max(Math.min(100, colorInfo.color[1]), 0) / 100;
+			hsl[2] = Math.max(Math.min(100, colorInfo.color[2]), 0) / 100;
+
+			var chroma = (1 - Math.abs(2 * hsl[2] - 1)) * hsl[1];
+			var _hue = hsl[0] / 60;
+			var x = chroma * (1 - Math.abs(_hue % 2 - 1));
+			var _rgb = [0, 0, 0];
+			switch(Math.floor(_hue)) {
+				case 0: _rgb = [chroma, x, 0]; break;
+				case 1: _rgb = [x, chroma, 0]; break;
+				case 2: _rgb = [0, chroma, x]; break;
+				case 3: _rgb = [0, x, chroma]; break;
+				case 4: _rgb = [x, 0, chroma]; break;
+				case 5: _rgb = [chroma, 0, x]; break;
+				default: _rgb = [0, 0, 0]; break;
+			}
+			for(var i = 0; i < 3; i++) {
+				hex[i] = ("00" + Math.round((_rgb[i] + (hsl[2] - 0.5 * chroma)) * 255).toString(16)).slice(-2);
+			}
+			break;
 	}
 
-	return hexArray;
+	return hex;
 }
 
 /**
  * @param {Boolean} prefix: whether to include the "#" prefix
  */
 String.prototype.toHexString = function(prefix) {
-	var pfx = (typeof prefix === 'undefined') ? "#" : "";
+	var pfx = (typeof prefix === "undefined") ? "#" : "";
 	return pfx + this.toHexArray().join("");
 }
 
@@ -123,25 +180,63 @@ String.prototype.toHSL = function() {
 }
 
 String.prototype.toHSLArray = function() {
-	var rgb = this.toRGBArray();
-    var r = rgb[0] / 255, g = rgb[1] / 255, b = rgb[2] / 255;
-    var max = Math.max(r, g, b), min = Math.min(r, g, b);
-    var h, s, l = (max + min) / 2;
+	var colorInfo = getColorSpace(this);
+	var hsl = [0, 0, 0, 1];
 
-    if(max === min) {
-        h = s = 0; // achromatic
-    } else {
-        var d = max - min;
-        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-        switch(max) {
-            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
-            case g: h = (b - r) / d + 2; break;
-            case b: h = (r - g) / d + 4; break;
-        }
-        h /= 6;
-    }
+	switch(colorInfo.space) {
+		case "named":
+			var hexStr = padHex(NAMED_TO_HEX[colorInfo.color]);
+			var hex = [hexStr.substring(0, 2), hexStr.substring(2, 4), hexStr.substring(4, 6)];
+		case "hex":
+			var hex;
+			if(typeof hex === "undefined") {
+				hex = colorInfo.color;
+			}
+			var rgb = [parseInt(hex[0], 16), parseInt(hex[1], 16), parseInt(hex[2], 16)];
+		case "rgba":
+			hsl[3] = colorInfo.color[3] || 1;
+		case "rgb":
+			if(typeof rgb === "undefined") {
+				rgb = colorInfo.color;
+			}
 
-    return [h*360, s*100, l*100];
+			if(typeof colorInfo.color[0] === "string" && colorInfo.color[0].charAt(colorInfo.color[0].length - 1) === "%") {
+				// normalize to decimal form
+				for(var i = 0; i < 3; i++) {
+					rgb[i] = parseFloat(rgb[i], 10) * 2.55;
+				}
+			}
+
+
+			var r = rgb[0] / 255, g = rgb[1] / 255, b = rgb[2] / 255;
+		    var max = Math.max(r, g, b), min = Math.min(r, g, b);
+		    var h, s, l = (max + min) / 2;
+
+		    if(max === min) {
+		        h = s = 0; // achromatic
+		    } else {
+		        var d = max - min;
+		        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+		        switch(max) {
+		            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+		            case g: h = (b - r) / d + 2; break;
+		            case b: h = (r - g) / d + 4; break;
+		        }
+		        h /= 6;
+		    }
+
+		    hsl = [h * 360, s * 100, l * 100, hsl[3]];
+			break;
+		case "hsla":
+			hsl[3] = colorInfo.color[3];
+		case "hsl":
+			hsl[0] = ((colorInfo.color[0] % 360) + 360) % 360;
+			hsl[1] = Math.max(Math.min(100, colorInfo.color[1]), 0);
+			hsl[2] = Math.max(Math.min(100, colorInfo.color[2]), 0);
+			break;
+	}
+
+	return hsl;
 }
 
 String.prototype.toHSLString = function() {
@@ -150,7 +245,7 @@ String.prototype.toHSLString = function() {
 }
 
 String.prototype.toNamed = function() {
-	return HEX_TO_NAMED[this.trim().toHexString()];
+	return HEX_TO_NAMED[this.toHexString()];
 }
 
 /**
@@ -167,6 +262,81 @@ String.prototype.toKeyword = function() { return this.toNamed(); }
  * Alias
  */
 String.prototype.toKeywordString = function() { return this.toNamed(); }
+
+function getColorSpace(color) {
+	var colorinfo = {
+		space: null,
+		color: color
+	};
+
+	if(color.match(/^#?([a-f0-9]{3}){1,2}$/i)) {
+		colorinfo.space = "hex";
+		color = padHex(color);
+		colorinfo.color = [color.substring(0,2), color.substring(2,4), color.substring(4,6)];
+	}
+	else if(color.match(/^rgb\(\s*((\d+((\.\d+)?%)?|\.\d+%)\s*,\s*){2}(\d+((\.\d+)?%)?|\.\d+%)\s*\)$/i)) {
+		colorinfo.space = "rgb";
+		colorinfo.color = color.match(/\d+((\.\d+)?%)?|\.\d+%/g);
+		validateRGB();
+	}
+	else if(color.match(/^rgba\(\s*((\d+((\.\d+)?%)?|\.\d+%)\s*,\s*){3}\d*\.?\d+\s*\)$/i)) {
+		colorinfo.space = "rgba";
+		colorinfo.color = color.match(/(\d+(\.\d+)?|\.\d+)%?/g);
+		validateRGB();
+	}
+	else if(color.match(/^hsl\(\s*-?(\d+(\.\d+)?|\.\d+)(\s*,\s*-?(\d+(\.\d+)?|\.\d+)%){2}\s*\)$/i)) {
+		colorinfo.space = "hsl";
+		colorinfo.color = color.match(/\-?(\d+(\.\d+)?|\.\d+)%?/g);
+		validateHSL();
+	}
+	else if(color.match(/^hsla\(\s*-?(\d+(\.\d+)?|\.\d+)(\s*,\s*-?(\d+(\.\d+)?|\.\d+)%){2}\s*,s*\d*\.?\d+\s*\)$/i)) {
+		colorinfo.space = "hsla";
+		colorinfo.color = color.match(/\-?(\d+(\.\d+)?|\.\d+)%?/g);
+		validateHSL();
+	}
+	else if(NAMED_TO_HEX.hasOwnProperty(color)) {
+		colorinfo.space = "named";
+	}
+
+	return colorinfo;
+
+	function validateRGB() {
+		var percentMode = typeof colorinfo.color[0] === "string" && colorinfo.color[0].charAt(colorinfo.color[0].length - 1) === "%";
+		var rgbMap = ["red", "green", "blue"];
+		for(var i = 0; i < 3; i++) {
+			var c = colorinfo.color[i];
+			if((percentMode && (c.charAt(c.length - 1) !== "%" || c < 0 || c > 100)) || (!percentMode && (c.charAt(c.length - 1) === "%" || c < 0 || c > 255))) {
+				throw("Invalid value for " + rgbMap[i] + " component in RGB(A): " + c);
+			}
+			if(!percentMode) {
+				colorinfo.color[i] = parseFloat(colorinfo.color[i], 10);
+			}
+		}
+
+		if(colorinfo.space === "rgba") {
+			validateOpacity();
+		}
+	}
+
+	function validateHSL() {
+		colorinfo.color[0] = parseFloat(colorinfo.color[0], 10);
+		colorinfo.color[1] = parseFloat(colorinfo.color[1], 10);
+		colorinfo.color[2] = parseFloat(colorinfo.color[2], 10);
+
+		if(colorinfo.space === "hsla") {
+			validateOpacity();
+		}
+	}
+		
+	function validateOpacity() {
+		var a = colorinfo.color[3];
+		if(a.charAt(a.length - 1) === "%" || a < 0 || a > 1) {
+			throw("Invalid value for opacity: " + colorinfo.color[3]);
+		}
+		colorinfo.color[3] = parseFloat(colorinfo.color[3]);
+	}
+}
+
 
 /**
  * Retrieve the color unit being used
@@ -248,13 +418,13 @@ function isHSL() {
 }
 
 function isNamed() {
-	return NAMED_TO_HEX.hasOwnProperty(this.trim());
+	return NAMED_TO_HEX.hasOwnProperty(this);
 }
 
 /**
  * Pads any valid hex color into #xxxxxx
  * @param {String} - hexVal the hexadecimal to pad
- * @reeturn {String} - a properly padded hexadecimal value (6 digits preceded by a #)
+ * @reeturn {String} - a 6-digit hexadecimal value
  */
 function padHex(hexVal) {
 	var val = (hexVal.charAt(0) === "#" ? hexVal.substring(1) : hexVal);
@@ -556,6 +726,7 @@ var HEX_TO_NAMED = {
 	"#ffff00": "yellow",
 	"#9acd32": "yellowgreen"
 };
+
 
 
 })();

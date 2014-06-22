@@ -6,9 +6,9 @@ QUnit.module("color black", {
 		hsl = "hsl(0,0%,0%)";
 		named = "black";
 
-		rgbExp = [0, 0, 0];
+		rgbExp = [0, 0, 0, 1];
 		hexExp = ["00", "00", "00"];
-		hslExp = [0, 0, 0];
+		hslExp = [0, 0, 0, 1];
 	}
 });
 QUnit.test("hex2rgb", function(assert) {
@@ -83,9 +83,9 @@ QUnit.module("color white", {
 		hsl = "hsl(0,100%,100%)";
 		named = "white";
 
-		rgbExp = [255, 255, 255];
+		rgbExp = [255, 255, 255, 1];
 		hexExp = ["ff", "ff", "ff"];
-		hslExp = [0, 0, 100];
+		hslExp = [0, 0, 100, 1];
 	}
 });
 QUnit.test("hex2rgb", function(assert) {
