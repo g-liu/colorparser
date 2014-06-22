@@ -123,7 +123,6 @@ String.prototype.toHexArray = function() {
 			break;
 		case "rgba": // ignore alpha - hex doesn't support it anyway
 		case "rgb":
-			console.log(colorInfo);
 			var percentMode = typeof colorInfo.color[0] === "string" && colorInfo.color[0].charAt(colorInfo.color[0].length - 1) === "%";
 			for(var i = 0; i < 3; i++) {
 				var cFloat = parseFloat(colorInfo.color[i], 10);
