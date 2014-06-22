@@ -88,7 +88,7 @@ String.prototype.toRGBString = function(usePercents) {
 	var rgb = this.toRGBArray(usePercents);
 	var rgbString = "rgb" + (rgb[3] !== 1 ? "a" : "") + "("
 	if(usePercents) {
-		rgbString += rgb[0] + "%," + rgb[1] + "%," + rgb[2] + "%" + (rgb[3] !== 1 ? rgb[3] : "" ) + ")";
+		rgbString += rgb[0] + "%," + rgb[1] + "%," + rgb[2] + "%" + (rgb[3] !== 1 ? "," + rgb[3] : "" ) + ")";
 	}
 	else {
 		rgb = (rgb[3] !== 1 ? rgb : rgb.slice(0, 3));
@@ -172,7 +172,8 @@ String.prototype.toHSL = function() {
 	return hsl = {
 		"h": _hsl[0],
 		"s": _hsl[1],
-		"l": _hsl[2]
+		"l": _hsl[2],
+		"a": _hsl[3]
 	};
 }
 
@@ -238,7 +239,9 @@ String.prototype.toHSLArray = function() {
 
 String.prototype.toHSLString = function() {
 	var hsl = this.toHSLArray();
-	return "hsl(" + hsl[0] + "," + hsl[1] + "%," + hsl[2] + "%)";
+	var hslString = "hsl" + (hsl[3] !== 1 ? "a" : "") + "("
+	hslString += hsl[0] + "," + hsl[1] + "%," + hsl[2] + "%" + (hsl[3] !== 1 ? "," + hsl[3] : "") + ")";
+	return hslString;
 }
 
 String.prototype.toNamed = function() {
