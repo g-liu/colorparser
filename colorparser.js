@@ -16,9 +16,6 @@ String.prototype.toRGB = function(usePercents) {
 }
 
 String.prototype.toRGBArray = function(usePercents) {
-	// var type = getType.call(this);
-	// var rgbArray = [-1, -1, -1];
-
 	var colorInfo = getColorSpace(this);
 	var rgb = [0, 0, 0, 1];
 
@@ -339,89 +336,6 @@ function getColorSpace(color) {
 
 
 /**
- * Retrieve the color unit being used
- * @param {String} color
- * @return ...
- */
-function getType() {
-	if(isHex.call(this)) {
-		return 0;
-	}
-	else if(isRGB.call(this)) {
-		return 1;
-	}
-	else if(isHSL.call(this)) {
-		return 2;
-	}
-	else if(isNamed.call(this)) {
-		return 3;
-	}
-	else {
-		throw("Not a color: '" + this + "' is not a color.");
-	}
-}
-
-function isHex() {
-	return this.match(/^#?[A-F0-9]{3}([A-F0-9]{3})?$/i);
-}
-
-function isRGB() {
-	// preliminary "loose" regex match
-	if(this.match(/^rgb\(\s*((\d+((\.\d+)?%)?|\.\d+%)\s*,\s*){2}(\d+((\.\d+)?%)?|\.\d+%)\s*\)$/i)) {
-		// ^rgba?\(\s*(\d*\.?\d+%?\s*,\s*){2}\d*\.?\d+%?\s*(,\s*\d*.?\d+\s*)?\)$
-
-		var nums = this.match(/\d+((\.\d+)?%)?|\.\d+%/gi);
-		if(!nums || !nums.length || nums.length != 3) {
-			return false;
-		}
-
-		// check format of each
-		var usePercent = (nums[0].charAt(nums[0].length - 1) === "%");
-		for(var i = 0; i < 3; i++) {
-			var numInt = parseFloat(nums[i], 10);
-			if(usePercent && (nums[i].charAt(nums[i].length - 1) !== "%" || numInt < 0 || numInt > 100)) {
-				return false;
-			}
-			else if(!usePercent && nums[i].charAt(nums[i].length - 1) === "%" || numInt < 0 || numInt > 255) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	return false;
-}
-
-function isHSL() {
-	// preliminary "loose" regex match
-	if(this.match(/^hsl\(\s*-?(\d+(\.\d+)?|\.\d+)(\s*,\s*-?(\d+(\.\d+)?%|\.\d+%)){2}\s*\)$/i)) {
-		// ^hsla?\(\s*-?\d*.?\d+(\s*,\s*-?\d*.?\d+%){2}\s*(,\s*\d*.?\d+\s*)?\)$
-
-		var nums = this.match(/\d+(\.\d+)?%?|\.\d+%?/gi);
-		if(!nums || !nums.length || nums.length !== 3) {
-			return false;
-		}
-
-		// check first value (hue) separately
-		if(nums[0].charAt(nums[0].length - 1) === "%") {
-			return false;
-		}
-		for(var i = 1; i < 3; i++) {
-			if(nums[i].charAt(nums[i].length - 1) !== "%") {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	return false;
-}
-
-function isNamed() {
-	return NAMED_TO_HEX.hasOwnProperty(this);
-}
-
-/**
  * Pads any valid hex color into #xxxxxx
  * @param {String} - hexVal the hexadecimal to pad
  * @reeturn {String} - a 6-digit hexadecimal value
@@ -726,7 +640,5 @@ var HEX_TO_NAMED = {
 	"#ffff00": "yellow",
 	"#9acd32": "yellowgreen"
 };
-
-
 
 })();
