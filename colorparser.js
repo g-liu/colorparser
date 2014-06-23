@@ -56,8 +56,8 @@ String.prototype.toRGBArray = function(usePercents) {
 			// normalize
 			var hsl = [];
 			hsl[0] = ((colorInfo.color[0] % 360) + 360) % 360;
-			hsl[1] = Math.max(Math.min(100, colorInfo.color[1], 10), 0) / 100;
-			hsl[2] = Math.max(Math.min(100, colorInfo.color[2], 10), 0) / 100;
+			hsl[1] = Math.max(Math.min(100, colorInfo.color[1]), 0) / 100;
+			hsl[2] = Math.max(Math.min(100, colorInfo.color[2]), 0) / 100;
 
 			var chroma = (1 - Math.abs(2 * hsl[2] - 1)) * hsl[1];
 			var _hue = hsl[0] / 60;
@@ -191,7 +191,7 @@ String.prototype.toHSLArray = function() {
 			}
 			var rgb = [parseInt(hex[0], 16), parseInt(hex[1], 16), parseInt(hex[2], 16)];
 		case "rgba":
-			hsl[3] = colorInfo.color[3] || 1;
+			hsl[3] = colorInfo.space === "rgba" ? colorInfo.color[3] : 1;
 		case "rgb":
 			if(typeof rgb === "undefined") {
 				rgb = colorInfo.color;
@@ -265,12 +265,12 @@ String.prototype.toKeywordString = function() { return this.toNamed(); }
 function getColorSpace(color) {
 	var colorinfo = {
 		space: null,
-		color: color
+		color: color.toLowerCase()
 	};
 
 	if(color.match(/^#?([a-f0-9]{3}){1,2}$/i)) {
 		colorinfo.space = "hex";
-		color = padHex(color);
+		color = padHex(color.toLowerCase());
 		colorinfo.color = [color.substring(0,2), color.substring(2,4), color.substring(4,6)];
 	}
 	else if(color.match(/^rgb\(\s*((\d+((\.\d+)?%)?|\.\d+%)\s*,\s*){2}(\d+((\.\d+)?%)?|\.\d+%)\s*\)$/i)) {
@@ -293,7 +293,7 @@ function getColorSpace(color) {
 		colorinfo.color = color.match(/\-?(\d+(\.\d+)?|\.\d+)%?/g);
 		validateHSL();
 	}
-	else if(NAMED_TO_HEX.hasOwnProperty(color)) {
+	else if(NAMED_TO_HEX.hasOwnProperty(color.toLowerCase())) {
 		colorinfo.space = "named";
 	}
 

@@ -80,7 +80,7 @@ QUnit.module("color white", {
 	setup: function() {
 		rgb = "rgb(255,255,255)";
 		hex = "#ffffff";
-		hsl = "hsl(0,100%,100%)";
+		hsl = "hsl(0,0%,100%)";
 		named = "white";
 
 		rgbExp = [255, 255, 255, 1];
@@ -157,7 +157,7 @@ QUnit.module("RGB red value correctness");
 QUnit.test("from rgb", function(assert) {
 	assert.deepEqual("rgb(37,41,23)".toRGBArray()[0], 37, "red value is 37");
 	assert.deepEqual("rgb(215,41,23)".toRGBArray()[0], 215, "red value is 215");
-	assert.deepEqual("rgb(83%,22%,100%)".toRGBArray()[0], 211.65, "red value is 211.65");
+	assert.deepEqual("rgb(86%,22%,100%)".toRGBArray()[0], 219.3, "red value is 219.3");
 });
 QUnit.test("from hex", function(assert) {
 	assert.deepEqual("#2d8821".toRGBArray()[0], 45, "red value is 45 (0x2d)");
@@ -573,7 +573,7 @@ QUnit.test("named2hsl", function(assert) {
 	assert.deepEqual(this.named.toUpperCase().toHSLArray(), this.named.toHSLArray(), "hsl arrays equal");
 });
 QUnit.test("named2named", function(assert) {
-	assert.deepEqual(this.named.toUpperCase().toNamed(), this.hsl.toNamed(), "keyword names equal");
+	assert.deepEqual(this.named.toUpperCase().toNamed(), this.named.toNamed(), "keyword names equal");
 });
 
 // TODO: test filtering of invalid colors
