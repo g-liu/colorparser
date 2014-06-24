@@ -75,7 +75,7 @@ String.prototype.toRGBArray = function(usePercents) {
 			for(var i = 0; i < 3; i++) {
 				rgb[i] = _rgb[i] + (hsl[2] - 0.5 * chroma);
 				if(!usePercents) {
-					rgb[i] = Math.round(rgb[i] * 255);
+					rgb[i] *= 255;
 				}
 			}
 			break;
@@ -91,6 +91,10 @@ String.prototype.toRGBString = function(usePercents) {
 		rgbString += rgb[0] + "%," + rgb[1] + "%," + rgb[2] + "%" + (rgb[3] !== 1 ? "," + rgb[3] : "" ) + ")";
 	}
 	else {
+		// round all rgb values (don't round alpha)
+		for(var i = 0; i < 3; i++) {
+			rgb[i] = Math.round(rgb[i]);
+		}
 		rgb = (rgb[3] !== 1 ? rgb : rgb.slice(0, 3));
 		rgbString += rgb.toString() + ")";
 	}
@@ -115,8 +119,7 @@ String.prototype.toHexArray = function() {
 	}
 	switch(colorInfo.space) {
 		case "named":
-			var hexStr = padHex(NAMED_TO_HEX[colorInfo.color]);
-			var hex = [hexStr.substring(0, 2), hexStr.substring(2, 4), hexStr.substring(4, 6)];
+			var hex = formatHex(NAMED_TO_HEX[colorInfo.color]);
 			break;
 		case "hex":
 			hex = colorInfo.color;
@@ -182,8 +185,7 @@ String.prototype.toHSLArray = function() {
 
 	switch(colorInfo.space) {
 		case "named":
-			var hexStr = padHex(NAMED_TO_HEX[colorInfo.color]);
-			var hex = [hexStr.substring(0, 2), hexStr.substring(2, 4), hexStr.substring(4, 6)];
+			var hex = formatHex(NAMED_TO_HEX[colorInfo.color]);
 		case "hex":
 			var hex;
 			if(typeof hex === "undefined") {
@@ -270,8 +272,7 @@ function getColorSpace(color) {
 
 	if(color.match(/^#?([a-f0-9]{3}){1,2}$/i)) {
 		colorinfo.space = "hex";
-		color = padHex(color.toLowerCase());
-		colorinfo.color = [color.substring(0,2), color.substring(2,4), color.substring(4,6)];
+		colorinfo.color = formatHex(color.toLowerCase());
 	}
 	else if(color.match(/^rgb\(\s*((\d+((\.\d+)?%)?|\.\d+%)\s*,\s*){2}(\d+((\.\d+)?%)?|\.\d+%)\s*\)$/i)) {
 		colorinfo.space = "rgb";
@@ -336,18 +337,20 @@ function getColorSpace(color) {
 	}
 }
 
-
 /**
  * Pads any valid hex color into #xxxxxx
  * @param {String} - hexVal the hexadecimal to pad
- * @reeturn {String} - a 6-digit hexadecimal value
+ * @return {Array} - a 6-digit hexadecimal value
  */
-function padHex(hexVal) {
-	var val = (hexVal.charAt(0) === "#" ? hexVal.substring(1) : hexVal);
-	if(val.length === 3) {
-		val = val.charAt(0) + val.charAt(0) + val.charAt(1) + val.charAt(1) + val.charAt(2) + val.charAt(2);
+function formatHex(hexVal) {
+	if(hexVal.charAt(0) === "#") {
+		hexVal = hexVal.substring(1);
 	}
-	return val;
+	var hex = [], tokenLength = (hexVal.length === 6 ? 2 : 1);
+	for(var i = 0; i < hexVal.length; i += tokenLength) {
+		hex.push(hexVal.substring(i, i + tokenLength) + (tokenLength === 1 ? hexVal.substring(i, i + tokenLength) : ""));
+	}
+	return hex;
 }
 
 var NAMED_TO_HEX = {
