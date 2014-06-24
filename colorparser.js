@@ -7,13 +7,13 @@ String.prototype.trim = String.prototype.trim || function trim() { return this.r
 
 String.prototype.toRGB = function(usePercents) {
 	var _rgb = this.toRGBArray(usePercents);
-	return rgb = {
+	return {
 		"r": _rgb[0],
 		"g": _rgb[1],
 		"b": _rgb[2],
 		"a": _rgb[3]
 	};
-}
+};
 
 String.prototype.toRGBArray = function(usePercents) {
 	var colorInfo = getColorSpace(this);
@@ -27,7 +27,6 @@ String.prototype.toRGBArray = function(usePercents) {
 			// go thru hex first
 			var hexArray = colorInfo.color.toHexArray();
 		case "hex":
-			var hexArray;
 			if(typeof hexArray === "undefined") {
 				hexArray = colorInfo.color;
 			}
@@ -82,11 +81,11 @@ String.prototype.toRGBArray = function(usePercents) {
 	}
 
 	return rgb;
-}
+};
 
 String.prototype.toRGBString = function(usePercents) {
 	var rgb = this.toRGBArray(usePercents);
-	var rgbString = "rgb" + (rgb[3] !== 1 ? "a" : "") + "("
+	var rgbString = "rgb" + (rgb[3] !== 1 ? "a" : "") + "(";
 	if(usePercents) {
 		rgbString += rgb[0] + "%," + rgb[1] + "%," + rgb[2] + "%" + (rgb[3] !== 1 ? "," + rgb[3] : "" ) + ")";
 	}
@@ -99,16 +98,16 @@ String.prototype.toRGBString = function(usePercents) {
 		rgbString += rgb.toString() + ")";
 	}
 	return rgbString;
-}
+};
 
 String.prototype.toHex = function() {
 	var _h = this.toHexArray();
-	return hex = {
+	return {
 		"r": _h[0],
 		"g": _h[1],
 		"b": _h[2]
 	};
-}
+};
 
 String.prototype.toHexArray = function() {
 	var colorInfo = getColorSpace(this);
@@ -119,7 +118,7 @@ String.prototype.toHexArray = function() {
 	}
 	switch(colorInfo.space) {
 		case "named":
-			var hex = formatHex(NAMED_TO_HEX[colorInfo.color]);
+			hex = formatHex(NAMED_TO_HEX[colorInfo.color]);
 			break;
 		case "hex":
 			hex = colorInfo.color;
@@ -159,7 +158,7 @@ String.prototype.toHexArray = function() {
 	}
 
 	return hex;
-}
+};
 
 /**
  * @param {Boolean} prefix: whether to include the "#" prefix
@@ -167,17 +166,17 @@ String.prototype.toHexArray = function() {
 String.prototype.toHexString = function(prefix) {
 	var pfx = (typeof prefix === "undefined") ? "#" : "";
 	return pfx + this.toHexArray().join("");
-}
+};
 
 String.prototype.toHSL = function() {
 	var _hsl = this.toHSLArray();
-	return hsl = {
+	return {
 		"h": _hsl[0],
 		"s": _hsl[1],
 		"l": _hsl[2],
 		"a": _hsl[3]
 	};
-}
+};
 
 String.prototype.toHSLArray = function() {
 	var colorInfo = getColorSpace(this);
@@ -187,7 +186,6 @@ String.prototype.toHSLArray = function() {
 		case "named":
 			var hex = formatHex(NAMED_TO_HEX[colorInfo.color]);
 		case "hex":
-			var hex;
 			if(typeof hex === "undefined") {
 				hex = colorInfo.color;
 			}
@@ -208,23 +206,23 @@ String.prototype.toHSLArray = function() {
 
 
 			var r = rgb[0] / 255, g = rgb[1] / 255, b = rgb[2] / 255;
-		    var max = Math.max(r, g, b), min = Math.min(r, g, b);
-		    var h, s, l = (max + min) / 2;
+			var max = Math.max(r, g, b), min = Math.min(r, g, b);
+			var h, s, l = (max + min) / 2;
 
-		    if(max === min) {
-		        h = s = 0; // achromatic
-		    } else {
-		        var d = max - min;
-		        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-		        switch(max) {
-		            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
-		            case g: h = (b - r) / d + 2; break;
-		            case b: h = (r - g) / d + 4; break;
-		        }
-		        h /= 6;
-		    }
+			if(max === min) {
+				h = s = 0; // achromatic
+			} else {
+				var d = max - min;
+				s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+				switch(max) {
+					case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+					case g: h = (b - r) / d + 2; break;
+					case b: h = (r - g) / d + 4; break;
+				}
+				h /= 6;
+			}
 
-		    hsl = [h * 360, s * 100, l * 100, hsl[3]];
+			hsl = [h * 360, s * 100, l * 100, hsl[3]];
 			break;
 		case "hsla":
 			hsl[3] = colorInfo.color[3];
@@ -236,33 +234,33 @@ String.prototype.toHSLArray = function() {
 	}
 
 	return hsl;
-}
+};
 
 String.prototype.toHSLString = function() {
 	var hsl = this.toHSLArray();
-	var hslString = "hsl" + (hsl[3] !== 1 ? "a" : "") + "("
+	var hslString = "hsl" + (hsl[3] !== 1 ? "a" : "") + "(";
 	hslString += hsl[0] + "," + hsl[1] + "%," + hsl[2] + "%" + (hsl[3] !== 1 ? "," + hsl[3] : "") + ")";
 	return hslString;
-}
+};
 
 String.prototype.toNamed = function() {
 	return HEX_TO_NAMED[this.toHexString()];
-}
+};
 
 /**
  * Alias
  */
-String.prototype.toNamedString = function() { return this.toNamed(); }
+String.prototype.toNamedString = function() { return this.toNamed(); };
 
 /**
  * Alias
  */
-String.prototype.toKeyword = function() { return this.toNamed(); }
+String.prototype.toKeyword = function() { return this.toNamed(); };
 
 /**
  * Alias
  */
-String.prototype.toKeywordString = function() { return this.toNamed(); }
+String.prototype.toKeywordString = function() { return this.toNamed(); };
 
 function getColorSpace(color) {
 	var colorinfo = {
@@ -306,8 +304,8 @@ function getColorSpace(color) {
 		for(var i = 0; i < 3; i++) {
 			var c = colorinfo.color[i];
 			var cf = parseFloat(c);
-			if((percentMode && (c.charAt(c.length - 1) !== "%" || cf < 0 || cf > 100))
-					|| (!percentMode && (c.charAt(c.length - 1) === "%" || cf < 0 || cf > 255))) {
+			if((percentMode && (c.charAt(c.length - 1) !== "%" || cf < 0 || cf > 100)) ||
+					(!percentMode && (c.charAt(c.length - 1) === "%" || cf < 0 || cf > 255))) {
 				console.error("Invalid value for " + rgbMap[i] + " component in RGB(A): " + c);
 			}
 			if(!percentMode) {

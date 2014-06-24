@@ -699,3 +699,29 @@ QUnit.test("RGB invalid red", function(assert) {
 		"qux"
 	);
 });*/
+
+QUnit.module("check unnamed colors");
+QUnit.test("rgb2named", function(assert) {
+	assert.deepEqual("rgb(255,235,204)".toNamed(), undefined, "No named color");
+	assert.deepEqual("rgb(220,19,60)".toNamed(), undefined, "No named color");
+	assert.deepEqual("rgb(254,215,0)".toNamed(), undefined, "No named color");
+	assert.deepEqual("rgb(0%,0%,0.8%)".toNamed(), undefined, "No named color");
+	assert.deepEqual("rgb(100%,99%,100%)".toNamed(), undefined, "No named color");
+});
+QUnit.test("hex2named", function(assert) {
+	assert.deepEqual("#5F9EA1".toNamed(), undefined, "No named color");
+	assert.deepEqual("#1E90EF".toNamed(), undefined, "No named color");
+	assert.deepEqual("#88CEFA".toNamed(), undefined, "No named color");
+	assert.deepEqual("#FFDDB3".toNamed(), undefined, "No named color");
+});
+QUnit.test("hsl2named", function(assert) {
+	assert.deepEqual("hsl(31,19%,31%)".toNamed(), undefined, "No named color");
+	assert.deepEqual("hsl(242,81%,66.2%)".toNamed(), undefined, "No named color");
+	assert.deepEqual("hsl(256,12%,8.94%)".toNamed(), undefined, "No named color");
+	assert.deepEqual("hsl(0,0%,99%)".toNamed(), undefined, "No named color");
+});
+
+QUnit.module("named colors ignore transparency");
+QUnit.test("rgb2named", function(assert) {
+	assert.deepEqual("rgba(0,0,0,0.0001)".toNamed(), "black", "Ignored transparency for black");
+});
