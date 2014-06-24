@@ -1,157 +1,158 @@
 var MAX_TOL = 0.0001; // Floating point errors expected
 QUnit.config.testTimeout = 1000;
+
 QUnit.module("color black", {
 	setup: function() {
-		rgb = "rgb(0,0,0)";
-		hex = "#000000";
-		hsl = "hsl(0,0%,0%)";
-		named = "black";
+		this.rgb = "rgb(0,0,0)";
+		this.hex = "#000000";
+		this.hsl = "hsl(0,0%,0%)";
+		this.named = "black";
 
-		rgbExp = [0, 0, 0, 1];
-		hexExp = ["00", "00", "00"];
-		hslExp = [0, 0, 0, 1];
+		this.rgbExp = [0, 0, 0, 1];
+		this.hexExp = ["00", "00", "00"];
+		this.hslExp = [0, 0, 0, 1];
 	}
 });
-QUnit.test("hex2rgb", function(assert) {
-	var res = hex.toRGBArray();
-	assert.deepEqual(res, rgbExp, "expecting array " + rgbExp.toString());
-});
-QUnit.test("hex2hsl", function(assert) {
-	var res = hex.toHSLArray();
-	assert.deepEqual(res, hslExp, "expecting array " + hslExp.toString());
-});
-QUnit.test("hex2named", function(assert) {
-	var res = hex.toNamed();
-	assert.deepEqual(res, named, hex + " is " + named);
-});
-QUnit.test("hex2hex (reflexive)", function(assert) {
-	var res = hex.toHexArray();
-	assert.deepEqual(res, hexExp, "expecting array " + hexExp.toString());
-});
 QUnit.test("rgb2hex", function(assert) {
-	var res = rgb.toHexArray();
-	assert.deepEqual(res, hexExp, "expecting array " + hexExp.toString());
+	var res = this.rgb.toHexArray();
+	assert.deepEqual(res, this.hexExp, "expecting array " + this.hexExp.toString());
 });
 QUnit.test("rgb2hsl", function(assert) {
-	var res = rgb.toHSLArray();
-	assert.deepEqual(res, hslExp, "expecting array " + hslExp.toString());
+	var res = this.rgb.toHSLArray();
+	assert.deepEqual(res, this.hslExp, "expecting array " + this.hslExp.toString());
 });
 QUnit.test("rgb2named", function(assert) {
-	var res = rgb.toNamed();
-	assert.deepEqual(res, named, rgb + " is " + named);
+	var res = this.rgb.toNamed();
+	assert.deepEqual(res, this.named, this.rgb + " is " + this.named);
 });
 QUnit.test("rgb2rgb (reflexive)", function(assert) {
-	var res = rgb.toRGBArray();
-	assert.deepEqual(res, rgbExp, "expecting array " + rgbExp.toString());
+	var res = this.rgb.toRGBArray();
+	assert.deepEqual(res, this.rgbExp, "expecting array " + this.rgbExp.toString());
+});
+QUnit.test("hex2rgb", function(assert) {
+	var res = this.hex.toRGBArray();
+	assert.deepEqual(res, this.rgbExp, "expecting array " + this.rgbExp.toString());
+});
+QUnit.test("hex2hsl", function(assert) {
+	var res = this.hex.toHSLArray();
+	assert.deepEqual(res, this.hslExp, "expecting array " + this.hslExp.toString());
+});
+QUnit.test("hex2named", function(assert) {
+	var res = this.hex.toNamed();
+	assert.deepEqual(res, this.named, this.hex + " is " + this.named);
+});
+QUnit.test("hex2hex (reflexive)", function(assert) {
+	var res = this.hex.toHexArray();
+	assert.deepEqual(res, this.hexExp, "expecting array " + this.hexExp.toString());
 });
 QUnit.test("hsl2rgb", function(assert) {
-	var res = hsl.toRGBArray();
-	assert.deepEqual(res, rgbExp, "expecting array " + rgbExp.toString());
+	var res = this.hsl.toRGBArray();
+	assert.deepEqual(res, this.rgbExp, "expecting array " + this.rgbExp.toString());
 });
 QUnit.test("hsl2hex", function(assert) {
-	var res = hsl.toHexArray();
-	assert.deepEqual(res, hexExp, "expecting array " + hexExp.toString());
+	var res = this.hsl.toHexArray();
+	assert.deepEqual(res, this.hexExp, "expecting array " + this.hexExp.toString());
 });
 QUnit.test("hsl2hsl (reflexive)", function(assert) {
-	var res = hsl.toHSLArray();
-	assert.deepEqual(res, hslExp, "expecting array " + hslExp.toString());
+	var res = this.hsl.toHSLArray();
+	assert.deepEqual(res, this.hslExp, "expecting array " + this.hslExp.toString());
 });
 QUnit.test("hsl2named", function(assert) {
-	var res = hsl.toNamed();
-	assert.deepEqual(res, named, hsl + " is " + named);
+	var res = this.hsl.toNamed();
+	assert.deepEqual(res, this.named, this.hsl + " is " + this.named);
 });
 QUnit.test("named2rgb", function(assert) {
-	var res = named.toRGBArray();
-	assert.deepEqual(res, rgbExp, "expecting array " + rgbExp.toString());
+	var res = this.named.toRGBArray();
+	assert.deepEqual(res, this.rgbExp, "expecting array " + this.rgbExp.toString());
 });
 QUnit.test("named2hex", function(assert) {
-	var res = named.toHexArray();
-	assert.deepEqual(res, hexExp, "expecting array " + hexExp.toString());
+	var res = this.named.toHexArray();
+	assert.deepEqual(res, this.hexExp, "expecting array " + this.hexExp.toString());
 });
 QUnit.test("named2hsl", function(assert) {
-	var res = named.toHSLArray();
-	assert.deepEqual(res, hslExp, "expecting array " + hslExp.toString());
+	var res = this.named.toHSLArray();
+	assert.deepEqual(res, this.hslExp, "expecting array " + this.hslExp.toString());
 });
 QUnit.test("named2named (reflexive)", function(assert) {
-	var res = named.toNamed();
-	assert.deepEqual(res, named, named + " is " + named);
+	var res = this.named.toNamed();
+	assert.deepEqual(res, this.named, this.named + " is " + this.named);
 });
 
 QUnit.module("color white", {
 	setup: function() {
-		rgb = "rgb(255,255,255)";
-		hex = "#ffffff";
-		hsl = "hsl(0,0%,100%)";
-		named = "white";
+		this.rgb = "rgb(255,255,255)";
+		this.hex = "#ffffff";
+		this.hsl = "hsl(0,0%,100%)";
+		this.named = "white";
 
-		rgbExp = [255, 255, 255, 1];
-		hexExp = ["ff", "ff", "ff"];
-		hslExp = [0, 0, 100, 1];
+		this.rgbExp = [255, 255, 255, 1];
+		this.hexExp = ["ff", "ff", "ff"];
+		this.hslExp = [0, 0, 100, 1];
 	}
 });
-QUnit.test("hex2rgb", function(assert) {
-	var res = hex.toRGBArray();
-	assert.deepEqual(res, rgbExp, "expecting array " + rgbExp.toString());
-});
-QUnit.test("hex2hex (reflexive)", function(assert) {
-	var res = hex.toHexArray();
-	assert.deepEqual(res, hexExp, "expecting array " + hexExp.toString());
-});
-QUnit.test("hex2hsl", function(assert) {
-	var res = hex.toHSLArray();
-	assert.deepEqual(res, hslExp, "expecting array " + hslExp.toString());
-});
-QUnit.test("hex2named", function(assert) {
-	var res = hex.toNamed();
-	assert.deepEqual(res, named, hex + " is " + named);
-});
-QUnit.test("rgb2rgb (reflexive)", function(assert) {
-	var res = rgb.toRGBArray();
-	assert.deepEqual(res, rgbExp, "expecting array " + rgbExp.toString());
-});
 QUnit.test("rgb2hex", function(assert) {
-	var res = rgb.toHexArray();
-	assert.deepEqual(res, hexExp, "expecting array " + hexExp.toString());
+	var res = this.rgb.toHexArray();
+	assert.deepEqual(res, this.hexExp, "expecting array " + this.hexExp.toString());
 });
 QUnit.test("rgb2hsl", function(assert) {
-	var res = rgb.toHSLArray();
-	assert.deepEqual(res, hslExp, "expecting array " + hslExp.toString());
+	var res = this.rgb.toHSLArray();
+	assert.deepEqual(res, this.hslExp, "expecting array " + this.hslExp.toString());
 });
 QUnit.test("rgb2named", function(assert) {
-	var res = rgb.toNamed();
-	assert.deepEqual(res, named, rgb + " is " + named);
+	var res = this.rgb.toNamed();
+	assert.deepEqual(res, this.named, this.rgb + " is " + this.named);
+});
+QUnit.test("rgb2rgb (reflexive)", function(assert) {
+	var res = this.rgb.toRGBArray();
+	assert.deepEqual(res, this.rgbExp, "expecting array " + this.rgbExp.toString());
+});
+QUnit.test("hex2rgb", function(assert) {
+	var res = this.hex.toRGBArray();
+	assert.deepEqual(res, this.rgbExp, "expecting array " + this.rgbExp.toString());
+});
+QUnit.test("hex2hsl", function(assert) {
+	var res = this.hex.toHSLArray();
+	assert.deepEqual(res, this.hslExp, "expecting array " + this.hslExp.toString());
+});
+QUnit.test("hex2named", function(assert) {
+	var res = this.hex.toNamed();
+	assert.deepEqual(res, this.named, this.hex + " is " + this.named);
+});
+QUnit.test("hex2hex (reflexive)", function(assert) {
+	var res = this.hex.toHexArray();
+	assert.deepEqual(res, this.hexExp, "expecting array " + this.hexExp.toString());
 });
 QUnit.test("hsl2rgb", function(assert) {
-	var res = hsl.toRGBArray();
-	assert.deepEqual(res, rgbExp, "expecting array " + rgbExp.toString());
+	var res = this.hsl.toRGBArray();
+	assert.deepEqual(res, this.rgbExp, "expecting array " + this.rgbExp.toString());
 });
 QUnit.test("hsl2hex", function(assert) {
-	var res = hsl.toHexArray();
-	assert.deepEqual(res, hexExp, "expecting array " + hexExp.toString());
+	var res = this.hsl.toHexArray();
+	assert.deepEqual(res, this.hexExp, "expecting array " + this.hexExp.toString());
 });
 QUnit.test("hsl2hsl (reflexive)", function(assert) {
-	var res = hsl.toHSLArray();
-	assert.deepEqual(res, hslExp, "expecting array " + hslExp.toString());
+	var res = this.hsl.toHSLArray();
+	assert.deepEqual(res, this.hslExp, "expecting array " + this.hslExp.toString());
 });
 QUnit.test("hsl2named", function(assert) {
-	var res = hsl.toNamed();
-	assert.deepEqual(res, named, hsl + " is " + named);
+	var res = this.hsl.toNamed();
+	assert.deepEqual(res, this.named, this.hsl + " is " + this.named);
 });
 QUnit.test("named2rgb", function(assert) {
-	var res = named.toRGBArray();
-	assert.deepEqual(res, rgbExp, "expecting array " + rgbExp.toString());
+	var res = this.named.toRGBArray();
+	assert.deepEqual(res, this.rgbExp, "expecting array " + this.rgbExp.toString());
 });
 QUnit.test("named2hex", function(assert) {
-	var res = named.toHexArray();
-	assert.deepEqual(res, hexExp, "expecting array " + hexExp.toString());
+	var res = this.named.toHexArray();
+	assert.deepEqual(res, this.hexExp, "expecting array " + this.hexExp.toString());
 });
 QUnit.test("named2hsl", function(assert) {
-	var res = named.toHSLArray();
-	assert.deepEqual(res, hslExp, "expecting array " + hslExp.toString());
+	var res = this.named.toHSLArray();
+	assert.deepEqual(res, this.hslExp, "expecting array " + this.hslExp.toString());
 });
 QUnit.test("named2named (reflexive)", function(assert) {
-	var res = named.toNamed();
-	assert.deepEqual(res, named, named + " is " + named);
+	var res = this.named.toNamed();
+	assert.deepEqual(res, this.named, this.named + " is " + this.named);
 });
 
 QUnit.module("RGB red value correctness");
@@ -395,65 +396,65 @@ QUnit.test("rgb2hslJSON", function(assert) {
 
 QUnit.module("Reflexive conversions", {
 	setup: function() {
-		r = 85;
-		g = 51;
-		b = 17;
+		this.r = 85;
+		this.g = 51;
+		this.b = 17;
 
-		h = 72;
-		s = 20;
-		l = 50;
+		this.h = 72;
+		this.s = 20;
+		this.l = 50;
 
-		rgb = "rgb(" + r + "," + g + "," + b + ")";
-		hex = "#" + Math.random().toString(16).substring(2, 8);
-		hsl = "hsl(" + h + "," + s + "%," + l + "%)";
-		named = "chartreuse";
+		this.rgb = "rgb(" + this.r + "," + this.g + "," + this.b + ")";
+		this.hex = "#" + Math.random().toString(16).substring(2, 8);
+		this.hsl = "hsl(" + this.h + "," + this.s + "%," + this.l + "%)";
+		this.named = "chartreuse";
 	}
 });
 QUnit.test("rgb2hex2rgb", function(assert) {
-	assert.deepEqual(rgb.toHexString().toRGBString(), rgb, "rgb -> hex -> rgb conversion preserved");
+	assert.deepEqual(this.rgb.toHexString().toRGBString(), this.rgb, "rgb -> hex -> rgb conversion preserved");
 });
 QUnit.test("rgb2hsl2rgb", function(assert) {
-	var rgbActual = rgb.toHSLString().toRGBArray();
-	QUnit.close(rgbActual[0], r, MAX_TOL, "rgb -> hsl -> rgb red conversion preserved");
-	QUnit.close(rgbActual[1], g, MAX_TOL, "rgb -> hsl -> rgb green conversion preserved");
-	QUnit.close(rgbActual[2], b, MAX_TOL, "rgb -> hsl -> rgb blue conversion preserved");
+	var rgbActual = this.rgb.toHSLString().toRGBArray();
+	QUnit.close(rgbActual[0], this.r, MAX_TOL, "rgb -> hsl -> rgb red conversion preserved");
+	QUnit.close(rgbActual[1], this.g, MAX_TOL, "rgb -> hsl -> rgb green conversion preserved");
+	QUnit.close(rgbActual[2], this.b, MAX_TOL, "rgb -> hsl -> rgb blue conversion preserved");
 });
 QUnit.test("hex2rgb2hex", function(assert) {
-	assert.deepEqual(hex.toRGBString().toHexString(), hex, "hex -> rgb -> hex conversion preserved");
+	assert.deepEqual(this.hex.toRGBString().toHexString(), this.hex, "hex -> rgb -> hex conversion preserved");
 });
 QUnit.test("hex2hsl2hex", function(assert) {
-	assert.deepEqual(hex.toHSLString().toHexString(), hex, "hex -> hsl -> hex conversion preserved");
+	assert.deepEqual(this.hex.toHSLString().toHexString(), this.hex, "hex -> hsl -> hex conversion preserved");
 });
 QUnit.test("hsl2rgb2hsl", function(assert) {
-	assert.deepEqual(hsl.toRGBString().toHSLString(), hsl, "hsl -> rgb -> hsl conversion preserved");
+	assert.deepEqual(this.hsl.toRGBString().toHSLString(), this.hsl, "hsl -> rgb -> hsl conversion preserved");
 });
 QUnit.test("hsl2hex2hsl", function(assert) {
-	assert.deepEqual(hsl.toHexString().toHSLString(), hsl, "hsl -> hex -> hsl conversion preserved");
+	assert.deepEqual(this.hsl.toHexString().toHSLString(), this.hsl, "hsl -> hex -> hsl conversion preserved");
 });
 QUnit.test("named2rgb2named", function(assert) {
-	assert.deepEqual(named.toRGBString().toNamed(), named, "named -> rgb -> named conversion preserved");
+	assert.deepEqual(this.named.toRGBString().toNamed(), this.named, "named -> rgb -> named conversion preserved");
 });
 QUnit.test("named2hex2named", function(assert) {
-	assert.deepEqual(named.toHexString().toNamed(), named, "named -> hex -> named conversion preserved");
+	assert.deepEqual(this.named.toHexString().toNamed(), this.named, "named -> hex -> named conversion preserved");
 });
 QUnit.test("named2hsl2named", function(assert) {
-	assert.deepEqual(named.toHSLString().toNamed(), named, "named -> hsl -> named conversion preserved");
+	assert.deepEqual(this.named.toHSLString().toNamed(), this.named, "named -> hsl -> named conversion preserved");
 });
 
 QUnit.module("rgb percentage handling", {
 	setup: function() {
-		rgb = "rgb(51,102,153)";
-		rgbP = "rgb(20%,40%,60%)";
+		this.rgb = "rgb(51,102,153)";
+		this.rgbP = "rgb(20%,40%,60%)";
 	}
 });
 QUnit.test("rgb2rgb", function(assert) {
-	assert.deepEqual(rgbP.toRGBArray(), rgb.toRGBArray(), "all percents handled correctly in rgb conversion");
+	assert.deepEqual(this.rgbP.toRGBArray(), this.rgb.toRGBArray(), "all percents handled correctly in rgb conversion");
 });
 QUnit.test("rgb2hex", function(assert) {
-	assert.deepEqual(rgbP.toHexArray(), rgb.toHexArray(), "all percents handled correctly in hex conversion");
+	assert.deepEqual(this.rgbP.toHexArray(), this.rgb.toHexArray(), "all percents handled correctly in hex conversion");
 });
 QUnit.test("rgb2hsl", function(assert) {
-	assert.deepEqual(rgbP.toHSLArray(), rgb.toHSLArray(), "all percents handled correctly in hsl conversion");
+	assert.deepEqual(this.rgbP.toHSLArray(), this.rgb.toHSLArray(), "all percents handled correctly in hsl conversion");
 });
 
 QUnit.module("hex format handling");
@@ -543,21 +544,21 @@ QUnit.test("snap lum to 0", function(assert) {
 
 QUnit.module("whitespace agnostic", {
 	setup: function() {
-		rgbSp = "rgb( 8,  214,   62     )";
-		rgb = "rgb(8,214,62)";
+		this.rgbSp = "rgb( 8,  214,   62     )";
+		this.rgb = "rgb(8,214,62)";
 
-		hslSp = "hsl(   232, 48%,    81% )";
-		hsl = "hsl(232,48%,81%)";
+		this.hslSp = "hsl(   232, 48%,    81% )";
+		this.hsl = "hsl(232,48%,81%)";
 	}
 });
 QUnit.test("rgb2rgb", function(assert) {
-	assert.deepEqual(rgbSp.toRGBArray(), rgb.toRGBArray(), "whitespace ignored");
+	assert.deepEqual(this.rgbSp.toRGBArray(), this.rgb.toRGBArray(), "whitespace ignored");
 });
 QUnit.test("rgb2hex", function(assert) {
-	assert.deepEqual(rgbSp.toHexArray(), rgb.toHexArray(), "whitespace ignored");
+	assert.deepEqual(this.rgbSp.toHexArray(), this.rgb.toHexArray(), "whitespace ignored");
 });
 QUnit.test("rgb2hsl", function(assert) {
-	assert.deepEqual(rgbSp.toHSLArray(), rgb.toHSLArray(), "whitespace ignored");
+	assert.deepEqual(this.rgbSp.toHSLArray(), this.rgb.toHSLArray(), "whitespace ignored");
 });
 QUnit.test("rgb2named", function(assert) {
 	var _rgbSp = "rgb(    240 , 128, 128  )";
@@ -565,13 +566,13 @@ QUnit.test("rgb2named", function(assert) {
 	assert.deepEqual(_rgbSp.toNamed(), _rgb.toNamed(), "whitespace ignored");
 });
 QUnit.test("hsl2rgb", function(assert) {
-	assert.deepEqual(hslSp.toRGBArray(), hsl.toRGBArray(), "whitespace ignored");
+	assert.deepEqual(this.hslSp.toRGBArray(), this.hsl.toRGBArray(), "whitespace ignored");
 });
 QUnit.test("hsl2hex", function(assert) {
-	assert.deepEqual(hslSp.toHexArray(), hsl.toHexArray(), "whitespace ignored");
+	assert.deepEqual(this.hslSp.toHexArray(), this.hsl.toHexArray(), "whitespace ignored");
 });
 QUnit.test("hsl2hsl", function(assert) {
-	assert.deepEqual(hslSp.toHSLArray(), hsl.toHSLArray(), "whitespace ignored");
+	assert.deepEqual(this.hslSp.toHSLArray(), this.hsl.toHSLArray(), "whitespace ignored");
 });
 QUnit.test("hsl2named", function(assert) {
 	var _hslSp = "hsl(  90 , 100% , 50%     )";
@@ -581,29 +582,29 @@ QUnit.test("hsl2named", function(assert) {
 
 QUnit.module("ignore extra zeroes", {
 	setup: function() {
-		rgb0 = "rgb(00251,000053,000104)";
-		rgb = "rgb(251,53,104)";
-		hsl0 = "hsl(0000251,0049%,060%)";
-		hsl = "hsl(251,49%,60%)";
+		this.rgb0 = "rgb(00251,000053,000104)";
+		this.rgb = "rgb(251,53,104)";
+		this.hsl0 = "hsl(0000251,0049%,060%)";
+		this.hsl = "hsl(251,49%,60%)";
 	}
 });
 QUnit.test("rgb2rgb", function(assert) {
-	assert.deepEqual(rgb0.toRGBArray(), rgb.toRGBArray(), "padded zeroes ignored");
+	assert.deepEqual(this.rgb0.toRGBArray(), this.rgb.toRGBArray(), "padded zeroes ignored");
 });
 QUnit.test("rgb2hex", function(assert) {
-	assert.deepEqual(rgb0.toHexArray(), rgb.toHexArray(), "padded zeroes ignored");
+	assert.deepEqual(this.rgb0.toHexArray(), this.rgb.toHexArray(), "padded zeroes ignored");
 });
 QUnit.test("rgb2hsl", function(assert) {
-	assert.deepEqual(rgb0.toHSLArray(), rgb.toHSLArray(), "padded zeroes ignored");
+	assert.deepEqual(this.rgb0.toHSLArray(), this.rgb.toHSLArray(), "padded zeroes ignored");
 });
 QUnit.test("hsl2rgb", function(assert) {
-	assert.deepEqual(hsl0.toRGBArray(), hsl.toRGBArray(), "padded zeroes ignored");
+	assert.deepEqual(this.hsl0.toRGBArray(), this.hsl.toRGBArray(), "padded zeroes ignored");
 });
 QUnit.test("hsl2hex", function(assert) {
-	assert.deepEqual(hsl0.toHexArray(), hsl.toHexArray(), "padded zeroes ignored");
+	assert.deepEqual(this.hsl0.toHexArray(), this.hsl.toHexArray(), "padded zeroes ignored");
 });
 QUnit.test("hsl2hsl", function(assert) {
-	assert.deepEqual(hsl0.toHSLArray(), hsl.toHSLArray(), "padded zeroes ignored");
+	assert.deepEqual(this.hsl0.toHSLArray(), this.hsl.toHSLArray(), "padded zeroes ignored");
 });
 
 QUnit.module("case insensitive", {
@@ -664,3 +665,37 @@ QUnit.test("named2named", function(assert) {
 });
 
 // TODO: test filtering of invalid colors
+/*
+QUnit.module("No invalid colors");
+QUnit.test("RGB invalid red", function(assert) {
+	assert.throws(
+		function() {
+			"rgb(256,0,3)".toRGBArray();
+		},
+		"foo"
+	);
+	assert.throws(
+		function() {
+			"rgb(-5,2,3)".toRGBArray();
+		},
+		"bar"
+	);
+	assert.throws(
+		function() {
+			"rgb(20.46,2,3)".toRGBArray();
+		},
+		"baz"
+	);
+	assert.throws(
+		function() {
+			"rgb(880%,2%,3%)".toRGBArray();
+		},
+		"heh"
+	);
+	assert.throws(
+		function() {
+			"rgb(-3%,2%,3%)".toRGBArray();
+		},
+		"qux"
+	);
+});*/

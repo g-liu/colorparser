@@ -20,7 +20,7 @@ String.prototype.toRGBArray = function(usePercents) {
 	var rgb = [0, 0, 0, 1];
 
 	if(colorInfo.space === null) {
-		throw("Color \"" + colorInfo.color + "\" is not a valid color");
+		console.error("Color \"" + colorInfo.color + "\" is not a valid color");
 	}
 	switch(colorInfo.space) {
 		case "named":
@@ -305,8 +305,10 @@ function getColorSpace(color) {
 		var rgbMap = ["red", "green", "blue"];
 		for(var i = 0; i < 3; i++) {
 			var c = colorinfo.color[i];
-			if((percentMode && (c.charAt(c.length - 1) !== "%" || c < 0 || c > 100)) || (!percentMode && (c.charAt(c.length - 1) === "%" || c < 0 || c > 255))) {
-				throw("Invalid value for " + rgbMap[i] + " component in RGB(A): " + c);
+			var cf = parseFloat(c);
+			if((percentMode && (c.charAt(c.length - 1) !== "%" || cf < 0 || cf > 100))
+					|| (!percentMode && (c.charAt(c.length - 1) === "%" || cf < 0 || cf > 255))) {
+				console.error("Invalid value for " + rgbMap[i] + " component in RGB(A): " + c);
 			}
 			if(!percentMode) {
 				colorinfo.color[i] = parseFloat(colorinfo.color[i], 10);
@@ -331,7 +333,7 @@ function getColorSpace(color) {
 	function validateOpacity() {
 		var a = colorinfo.color[3];
 		if(a.charAt(a.length - 1) === "%" || a < 0 || a > 1) {
-			throw("Invalid value for opacity: " + colorinfo.color[3]);
+			console.error("Invalid value for opacity: " + colorinfo.color[3]);
 		}
 		colorinfo.color[3] = parseFloat(colorinfo.color[3]);
 	}
