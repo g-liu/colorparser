@@ -16,12 +16,9 @@ String.prototype.toRGB = function(usePercents) {
 };
 
 String.prototype.toRGBArray = function(usePercents) {
-	var colorInfo = getColorSpace(this);
+	var colorInfo = getColorInfo(this);
 	var rgb = [0, 0, 0, 1];
 
-	if(colorInfo.space === null) {
-		console.error("Color \"" + colorInfo.color + "\" is not a valid color");
-	}
 	switch(colorInfo.space) {
 		case "named":
 			// go thru hex first
@@ -42,10 +39,10 @@ String.prototype.toRGBArray = function(usePercents) {
 				var cFloat = parseFloat(colorInfo.color[i], 10);
 				rgb[i] = cFloat;
 				if(!usePercents && percentMode) {
-					rgb[i] *= 2.55;
+					rgb[i] = rgb[i] * 255 / 100;
 				}
 				else if(usePercents && !percentMode) {
-					rgb[i] /= 2.55;
+					rgb[i] = rgb[i] / 255 * 100;
 				}
 			}
 			break;
@@ -72,14 +69,13 @@ String.prototype.toRGBArray = function(usePercents) {
 				default: _rgb = [0, 0, 0]; break;
 			}
 			for(var i = 0; i < 3; i++) {
-				rgb[i] = _rgb[i] + (hsl[2] - 0.5 * chroma);
+				rgb[i] = (_rgb[i] + (hsl[2] - chroma / 2)) * 100;
 				if(!usePercents) {
-					rgb[i] *= 255;
+					rgb[i] = rgb[i] * 255 / 100;
 				}
 			}
 			break;
 	}
-
 	return rgb;
 };
 
@@ -110,12 +106,9 @@ String.prototype.toHex = function() {
 };
 
 String.prototype.toHexArray = function() {
-	var colorInfo = getColorSpace(this);
+	var colorInfo = getColorInfo(this);
 	var hex = ["00", "00", "00"];
-	
-	if(colorInfo.space === null) {
-		throw("Color \"" + colorInfo.color + "\" is not a valid color");
-	}
+
 	switch(colorInfo.space) {
 		case "named":
 			hex = formatHex(NAMED_TO_HEX[colorInfo.color]);
@@ -128,7 +121,7 @@ String.prototype.toHexArray = function() {
 			var percentMode = typeof colorInfo.color[0] === "string" && colorInfo.color[0].charAt(colorInfo.color[0].length - 1) === "%";
 			for(var i = 0; i < 3; i++) {
 				var cFloat = parseFloat(colorInfo.color[i], 10);
-				hex[i] = ("00" + Math.round(cFloat * (percentMode ? 2.55 : 1)).toString(16)).slice(-2);
+				hex[i] = ("00" + Math.round(cFloat * (percentMode ? 255 / 100 : 1)).toString(16)).slice(-2);
 			}
 			break;
 		case "hsla":
@@ -152,7 +145,7 @@ String.prototype.toHexArray = function() {
 				default: _rgb = [0, 0, 0]; break;
 			}
 			for(var i = 0; i < 3; i++) {
-				hex[i] = ("00" + Math.round((_rgb[i] + (hsl[2] - 0.5 * chroma)) * 255).toString(16)).slice(-2);
+				hex[i] = ("00" + Math.round((_rgb[i] + (hsl[2] - chroma / 2)) * 255).toString(16)).slice(-2);
 			}
 			break;
 	}
@@ -179,7 +172,7 @@ String.prototype.toHSL = function() {
 };
 
 String.prototype.toHSLArray = function() {
-	var colorInfo = getColorSpace(this);
+	var colorInfo = getColorInfo(this);
 	var hsl = [0, 0, 0, 1];
 
 	switch(colorInfo.space) {
@@ -200,7 +193,7 @@ String.prototype.toHSLArray = function() {
 			if(typeof colorInfo.color[0] === "string" && colorInfo.color[0].charAt(colorInfo.color[0].length - 1) === "%") {
 				// normalize to decimal form
 				for(var i = 0; i < 3; i++) {
-					rgb[i] = parseFloat(rgb[i], 10) * 2.55;
+					rgb[i] = parseFloat(rgb[i], 10) * 255 / 100;
 				}
 			}
 
@@ -248,25 +241,17 @@ String.prototype.toNamed = function() {
 };
 
 /**
- * Alias
+ * Aliases
  */
 String.prototype.toNamedString = function() { return this.toNamed(); };
-
-/**
- * Alias
- */
 String.prototype.toKeyword = function() { return this.toNamed(); };
-
-/**
- * Alias
- */
 String.prototype.toKeywordString = function() { return this.toNamed(); };
 
-function getColorSpace(color) {
-	var colorinfo = {
-		space: null,
-		color: color.toLowerCase()
-	};
+/**
+ * Retrieves the color info
+ */
+function getColorInfo(color) {
+	var colorinfo = {};
 
 	if(color.match(/^#?([a-f0-9]{3}){1,2}$/i)) {
 		colorinfo.space = "hex";
@@ -294,6 +279,10 @@ function getColorSpace(color) {
 	}
 	else if(NAMED_TO_HEX.hasOwnProperty(color.toLowerCase())) {
 		colorinfo.space = "named";
+		colorinfo.color = color.toLowerCase();
+	}
+	else {
+		throw "No color space match for " + color;
 	}
 
 	return colorinfo;
@@ -306,7 +295,7 @@ function getColorSpace(color) {
 			var cf = parseFloat(c);
 			if((percentMode && (c.charAt(c.length - 1) !== "%" || cf < 0 || cf > 100)) ||
 					(!percentMode && (c.charAt(c.length - 1) === "%" || cf < 0 || cf > 255))) {
-				console.error("Invalid value for " + rgbMap[i] + " component in RGB(A): " + c);
+				throw "Invalid value for " + rgbMap[i] + " component in RGB(A): " + c;
 			}
 			if(!percentMode) {
 				colorinfo.color[i] = parseFloat(colorinfo.color[i], 10);
@@ -331,7 +320,7 @@ function getColorSpace(color) {
 	function validateOpacity() {
 		var a = colorinfo.color[3];
 		if(a.charAt(a.length - 1) === "%" || a < 0 || a > 1) {
-			console.error("Invalid value for opacity: " + colorinfo.color[3]);
+			throw "Invalid value for opacity: " + colorinfo.color[3];
 		}
 		colorinfo.color[3] = parseFloat(colorinfo.color[3]);
 	}

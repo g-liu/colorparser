@@ -1,4 +1,4 @@
-var MAX_TOL = 0.0001; // Floating point errors expected
+var MAX_TOL = 0.0000000000001; // Floating point errors expected
 QUnit.config.testTimeout = 1000;
 
 QUnit.module("color black", {
@@ -159,7 +159,7 @@ QUnit.module("RGB red value correctness");
 QUnit.test("from rgb", function(assert) {
 	assert.deepEqual("rgb(37,41,23)".toRGBArray()[0], 37, "red value is 37");
 	assert.deepEqual("rgb(215,41,23)".toRGBArray()[0], 215, "red value is 215");
-	QUnit.close("rgb(86%,22%,100%)".toRGBArray()[0], 219.3, MAX_TOL, "red value is 219.3");
+	assert.deepEqual("rgb(86%,22%,100%)".toRGBArray()[0], 219.3, "red value is 219.3");
 });
 QUnit.test("from hex", function(assert) {
 	assert.deepEqual("#2d8821".toRGBArray()[0], 45, "red value is 45 (0x2d)");
@@ -181,7 +181,7 @@ QUnit.module("RGB green value correctness");
 QUnit.test("from rgb", function(assert) {
 	assert.deepEqual("rgb(37,41,23)".toRGBArray()[1], 41, "green value is 41");
 	assert.deepEqual("rgb(215,88,23)".toRGBArray()[1], 88, "green value is 88");
-	QUnit.close("rgb(83%,22%,100%)".toRGBArray()[1], 56.1, MAX_TOL, "green value is 56.1");
+	assert.deepEqual("rgb(83%,22%,100%)".toRGBArray()[1], 56.1, "green value is 56.1");
 });
 QUnit.test("from hex", function(assert) {
 	assert.deepEqual("#2d8821".toRGBArray()[1], 136, "green value is 136 (0x88)");
@@ -203,7 +203,7 @@ QUnit.module("RGB blue value correctness");
 QUnit.test("from rgb", function(assert) {
 	assert.deepEqual("rgb(37,41,23)".toRGBArray()[2], 23, "blue value is 23");
 	assert.deepEqual("rgb(215,88,99)".toRGBArray()[2], 99, "blue value is 99");
-	QUnit.close("rgb(83%,22%,100%)".toRGBArray()[2], 255, MAX_TOL, "blue value is 255");
+	assert.deepEqual("rgb(83%,22%,100%)".toRGBArray()[2], 255, "blue value is 255");
 });
 QUnit.test("from hex", function(assert) {
 	assert.deepEqual("#2d8821".toRGBArray()[2], 33, "blue value is 33 (0x21)");
@@ -289,7 +289,7 @@ QUnit.test("from named", function(assert) {
 
 QUnit.module("HSL hue correctness");
 QUnit.test("from rgb", function(assert) {
-	QUnit.close("rgb(37,41,23)".toHSLArray()[0], 73.333333333333, MAX_TOL, "hue is 73+1/3");
+	QUnit.close("rgb(37,41,23)".toHSLArray()[0], 73.333333333333333333333, MAX_TOL, "hue is 73+1/3");
 	QUnit.close("rgb(215,41,23)".toHSLArray()[0], 5.625, MAX_TOL, "hue is 5+5/8");
 	assert.deepEqual("rgb(80%,20%,100%)".toHSLArray()[0], 285, "hue is 285");
 });
@@ -415,8 +415,8 @@ QUnit.test("rgb2hex2rgb", function(assert) {
 });
 QUnit.test("rgb2hsl2rgb", function(assert) {
 	var rgbActual = this.rgb.toHSLString().toRGBArray();
-	QUnit.close(rgbActual[0], this.r, MAX_TOL, "rgb -> hsl -> rgb red conversion preserved");
-	QUnit.close(rgbActual[1], this.g, MAX_TOL, "rgb -> hsl -> rgb green conversion preserved");
+	assert.deepEqual(rgbActual[0], this.r, "rgb -> hsl -> rgb red conversion preserved");
+	assert.deepEqual(rgbActual[1], this.g, "rgb -> hsl -> rgb green conversion preserved");
 	QUnit.close(rgbActual[2], this.b, MAX_TOL, "rgb -> hsl -> rgb blue conversion preserved");
 });
 QUnit.test("hex2rgb2hex", function(assert) {
@@ -426,10 +426,17 @@ QUnit.test("hex2hsl2hex", function(assert) {
 	assert.deepEqual(this.hex.toHSLString().toHexString(), this.hex, "hex -> hsl -> hex conversion preserved");
 });
 QUnit.test("hsl2rgb2hsl", function(assert) {
-	assert.deepEqual(this.hsl.toRGBString().toHSLString(), this.hsl, "hsl -> rgb -> hsl conversion preserved");
+	var hslActual = this.hsl.toRGBString(true).toHSLArray();
+	QUnit.close(hslActual[0], this.h, MAX_TOL, "hsl -> rgb -> hsl hue conversion preserved");
+	QUnit.close(hslActual[1], this.s, MAX_TOL, "hsl -> rgb -> hsl sat conversion preserved");
+	QUnit.close(hslActual[2], this.l, MAX_TOL, "hsl -> rgb -> hsl lum conversion preserved");
 });
 QUnit.test("hsl2hex2hsl", function(assert) {
-	assert.deepEqual(this.hsl.toHexString().toHSLString(), this.hsl, "hsl -> hex -> hsl conversion preserved");
+	// note: hsl to hex is lossy, so tolerance has been increased
+	var hslActual = this.hsl.toHexString().toHSLArray();
+	QUnit.close(hslActual[0], this.h, 1, "hsl -> hex -> hsl hue conversion preserved");
+	QUnit.close(hslActual[1], this.s, 1, "hsl -> hex -> hsl sat conversion preserved");
+	QUnit.close(hslActual[2], this.l, 1, "hsl -> hex -> hsl lum conversion preserved");
 });
 QUnit.test("named2rgb2named", function(assert) {
 	assert.deepEqual(this.named.toRGBString().toNamed(), this.named, "named -> rgb -> named conversion preserved");
@@ -724,4 +731,12 @@ QUnit.test("hsl2named", function(assert) {
 QUnit.module("named colors ignore transparency");
 QUnit.test("rgb2named", function(assert) {
 	assert.deepEqual("rgba(0,0,0,0.0001)".toNamed(), "black", "Ignored transparency for black");
+	assert.deepEqual("rgba(245, 245, 220, 0.92)".toNamed(), "beige", "Ignored transparency for beige");
+	assert.deepEqual("rgba(255, 20, 147, 0.54321)".toNamed(), "deeppink", "Ignored transparency for deeppink");
+	assert.deepEqual("rgba(154, 205,  50, .3)".toNamed(), "yellowgreen", "Ignored transparency for yellowgreen");
+});
+QUnit.test("hsl2named", function(assert) {
+	assert.deepEqual("hsla(0,0%,0%,0.284)".toNamed(), "black", "Ignored transparency for black");
+	assert.deepEqual("hsla(0,0%,100%,0.8472)".toNamed(), "white", "Ignored transparency for white");
+	assert.deepEqual("hsla(0,100%,50%,.50)".toNamed(), "red", "Ignored transparency for red");
 });
