@@ -246,6 +246,20 @@ String.prototype.toNamedString = function() { return this.toNamed(); };
 String.prototype.toKeyword = function() { return this.toNamed(); };
 String.prototype.toKeywordString = function() { return this.toNamed(); };
 
+String.prototype.isValidColor = function() {
+	try {
+		var sp = getColorInfo(this).space;
+		if(typeof sp === 'undefined') {
+			return false;
+		}
+		return true;
+	}
+	catch(e) {
+		console.error(e);
+		return false;
+	}
+}
+
 /**
  * Retrieves the color info
  */
