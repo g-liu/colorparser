@@ -50,10 +50,8 @@ String.prototype.toRGBArray = function(usePercents) {
 			rgb[3] = colorInfo.color[3];
 		case "hsl":
 			// normalize
-			var hsl = [];
-			hsl[0] = ((colorInfo.color[0] % 360) + 360) % 360;
-			hsl[1] = Math.max(Math.min(100, colorInfo.color[1]), 0) / 100;
-			hsl[2] = Math.max(Math.min(100, colorInfo.color[2]), 0) / 100;
+			var hsl = colorInfo.color;
+			hsl[1] /= 100, hsl[2] /= 100;
 
 			var chroma = (1 - Math.abs(2 * hsl[2] - 1)) * hsl[1];
 			var _hue = hsl[0] / 60;
@@ -126,10 +124,8 @@ String.prototype.toHexArray = function() {
 			break;
 		case "hsla":
 		case "hsl":
-			var hsl = [];
-			hsl[0] = ((colorInfo.color[0] % 360) + 360) % 360;
-			hsl[1] = Math.max(Math.min(100, colorInfo.color[1]), 0) / 100;
-			hsl[2] = Math.max(Math.min(100, colorInfo.color[2]), 0) / 100;
+			var hsl = colorInfo.color;
+			hsl[1] /= 100, hsl[2] /= 100;
 
 			var chroma = (1 - Math.abs(2 * hsl[2] - 1)) * hsl[1];
 			var _hue = hsl[0] / 60;
@@ -219,9 +215,7 @@ String.prototype.toHSLArray = function() {
 		case "hsla":
 			hsl[3] = colorInfo.color[3];
 		case "hsl":
-			hsl[0] = ((colorInfo.color[0] % 360) + 360) % 360;
-			hsl[1] = Math.max(Math.min(100, colorInfo.color[1]), 0);
-			hsl[2] = Math.max(Math.min(100, colorInfo.color[2]), 0);
+			hsl = colorInfo.color.concat(hsl[3]);
 			break;
 	}
 
@@ -304,8 +298,7 @@ function getColorInfo(color) {
 		var percentMode = typeof colorinfo.color[0] === "string" && colorinfo.color[0].charAt(colorinfo.color[0].length - 1) === "%";
 		var rgbMap = ["red", "green", "blue"];
 		for(var i = 0; i < 3; i++) {
-			var c = colorinfo.color[i];
-			var cf = parseFloat(c);
+			var c = colorinfo.color[i], cf = parseFloat(c);
 			if((percentMode && (c.charAt(c.length - 1) !== "%" || cf < 0 || cf > 100)) ||
 					(!percentMode && (c.charAt(c.length - 1) === "%" || cf < 0 || cf > 255))) {
 				throw "Invalid value for " + rgbMap[i] + " component in RGB(A): " + c;
@@ -321,9 +314,9 @@ function getColorInfo(color) {
 	}
 
 	function validateHSL() {
-		colorinfo.color[0] = parseFloat(colorinfo.color[0], 10);
-		colorinfo.color[1] = parseFloat(colorinfo.color[1], 10);
-		colorinfo.color[2] = parseFloat(colorinfo.color[2], 10);
+		colorinfo.color[0] = ((parseFloat(colorinfo.color[0], 10) % 360) + 360) % 360;
+		colorinfo.color[1] = Math.max(Math.min(100, parseFloat(colorinfo.color[1], 10)), 0);
+		colorinfo.color[2] = Math.max(Math.min(100, parseFloat(colorinfo.color[2], 10)), 0);
 
 		if(colorinfo.space === "hsla") {
 			validateOpacity();
