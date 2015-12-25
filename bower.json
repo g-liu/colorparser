@@ -1,0 +1,23 @@
+{
+  "name": "colorparser",
+  "description": "JavaScript library to convert between color spaces.",
+  "main": "colorparser.js",
+  "authors": [
+    "Geoffrey Liu"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "color",
+    "library"
+  ],
+  "homepage": "https://github.com/g-liu/colorparser",
+  "moduleType": [],
+  "private": false,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
